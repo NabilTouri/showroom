@@ -253,7 +253,7 @@ export function buildBody(car) {
   mesh(misc, both(Rx(0.003, L - 0.003, 0, 0.10, warpBoth), 60, 6), M.floor);
   mesh(misc, both(Rx(0.24, 1.06, 0.17, 0.5), 20, 12, { offset: -0.035 }), M.inner, false);
   for (const ax of [FA, RA]) for (const s of [1, -1]) {
-    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.362, 0.362, 0.32, 32, 1, true, -Math.PI / 2, Math.PI), M.floor);
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.362, 0.362, 0.32, 32, 1, true, Math.PI / 2, Math.PI), M.floor);
     c.rotation.x = Math.PI / 2; c.position.set(ax, WHEEL_Y, 0.67 * s); misc.add(c);
     const e = new THREE.Mesh(new THREE.CircleGeometry(0.362, 32), M.floor); e.rotation.y = Math.PI / 2 * 0; e.position.set(ax, WHEEL_Y, 0.51 * s); misc.add(e);
   }

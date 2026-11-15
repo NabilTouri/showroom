@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { buildBody } from './car/body.js';
 import { buildWheels } from './car/wheels.js';
+import { buildMechanics } from './car/engine.js';
+import { buildInterior } from './car/interior.js';
 import { L } from './car/surface.js';
 
 const canvas = document.getElementById('view');
@@ -24,7 +26,7 @@ ground.rotation.x = -Math.PI / 2; scene.add(ground);
 const car = { root: new THREE.Group(), parts: {}, openables: {} };
 car.root.position.x = -L / 2;
 scene.add(car.root);
-buildBody(car); buildWheels(car);
+buildBody(car); buildWheels(car); buildInterior(car); buildMechanics(car);
 window.__app = { camera, controls, car, THREE };
 
 function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
