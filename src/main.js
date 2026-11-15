@@ -138,7 +138,7 @@ const VIEWS = {
   Motore: [[-3.9, 2.5, 1.7], [-1.32, 0.62, 0]],
   Interni: [[0.6, 1.55, 3.4], [0.1, 0.85, 0]],
 };
-const EXPLODE_VIEW = [[-5.6, 4.0, 3.0], [-1.35, 1.0, 0]];
+const EXPLODE_VIEW = [[-6.6, 4.4, 3.6], [-1.3, 0.95, 0]];
 function goView(name) {
   const [p, t] = VIEWS[name]; const T = new THREE.Vector3(...t), P = new THREE.Vector3(...p);
   if (name === 'Motore') setOpen('cofano', true);

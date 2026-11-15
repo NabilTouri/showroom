@@ -237,8 +237,8 @@ export function buildMechanics(car) {
   for (const id in car.parts) {
     const p = car.parts[id]; if (!p.userData.explode) continue;
     const c = new THREE.Box3().setFromObject(p).getCenter(new THREE.Vector3()); p.worldToLocal(c);
-    const dir = new THREE.Vector3((c.x - 0.70) * 1.7, 0, c.z * 1.9);
-    dir.y = 0.35 + Math.max(0, c.y - 0.25) * 2.4;
+    const dir = new THREE.Vector3((c.x - 0.70) * 1.2, 0, c.z * 1.35);
+    dir.y = 0.30 + Math.max(0, c.y - 0.25) * 1.9;
     dir.x -= 0.15;
     p.userData.explodeVec = dir;
   }
