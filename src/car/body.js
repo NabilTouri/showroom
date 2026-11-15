@@ -85,20 +85,20 @@ export function buildBody(car) {
   mesh(pa, both(Rx(0.003, 0.52, 0.10, 0.585, warpStart), 44, 26), M.paint);
   mesh(pa, both(Rx(0.003, (t) => xHoodLead(t) + 0.03, 0.5, 1, warpStart), 26, 22), M.paint);
   // presa d'aria inferiore
-  mesh(pa, both(polar(1.0, true, 0, 23, 0.265, 0.405), 20, 6, { offset: 0.004 }), M.trim);
+  mesh(pa, both(polar(1.0, true, 0, 23, 0.27, 0.42), 20, 6, { offset: 0.004 }), M.trim);
   // targa
   {
-    const sol = polarSolver(1.0, true); const [x, t] = sol(0, 0.51); const p = S(x, t);
+    const sol = polarSolver(1.0, true); const [x, t] = sol(0, 0.53); const p = S(x, t);
     const pl = mesh(pa, new THREE.BoxGeometry(0.012, 0.11, 0.52), [M.plastic, new THREE.MeshStandardMaterial({ map: plateTexture('FB 416 KD'), roughness: 0.5 }), M.plastic, M.plastic, M.plastic, M.plastic]);
     pl.material = [pl.material[0], pl.material[1], M.plastic, M.plastic, M.plastic, M.plastic];
-    pl.position.set(p[0] - 0.012, 0.51, 0);
+    pl.position.set(p[0] - 0.012, 0.53, 0);
   }
 
   // ---------- Calandra + logo ----------
   const cal = part('calandra');
-  mesh(cal, both(polar(1.0, true, 0, 22.5, 0.60, 0.722), 16, 6, { offset: 0.004 }), M.gloss);
+  mesh(cal, both(polar(1.0, true, 0, 22.5, 0.635, 0.752), 16, 6, { offset: 0.004 }), M.gloss);
   {
-    const sol = polarSolver(1.0, true); const [x, t] = sol(0, 0.662); const p = S(x, t), n = N(x, t);
+    const sol = polarSolver(1.0, true); const [x, t] = sol(0, 0.694); const p = S(x, t), n = N(x, t);
     const lg = mesh(cal, logoGeo(0.066), M.chrome);
     lg.position.set(p[0] - 0.012, p[1], 0); lg.rotation.set(0, -Math.PI / 2, 0);
     lg.rotateX(-Math.atan2(n[1], -n[0]) * 0.8);
@@ -107,11 +107,11 @@ export function buildBody(car) {
   // ---------- Fari, DRL ----------
   for (const s of [1, -1]) {
     const f = part('faro_' + sfx(s));
-    const yb = (u) => lerp(0.615, 0.752, Math.pow(u, 1.3)), yt = (u) => lerp(0.728, 0.785, Math.pow(u, 0.7));
+    const yb = (u) => lerp(0.648, 0.778, Math.pow(u, 1.5)), yt = (u) => lerp(0.762, 0.806, Math.pow(u, 0.6));
     mesh(f, geo(polar(1.0, true, 22.5, 62, yb, yt), 26, 8, { offset: 0.003, side: s }), M.gloss);
     mesh(f, geo(polar(1.0, true, 22.5, 62, yb, yt), 26, 8, { offset: 0.009, side: s }), M.lens, false);
     const sol = polarSolver(1.0, true);
-    for (const [th, y, r] of [[29, 0.682, 0.036], [39, 0.722, 0.028]]) {
+    for (const [th, y, r] of [[28.5, 0.708, 0.04], [37.5, 0.742, 0.03]]) {
       const [x, t] = sol(th * D2R, y); const p = S(x, t);
       const b = mesh(f, new THREE.SphereGeometry(r, 20, 14), M.gloss); b.position.set(p[0] + 0.012, p[1], p[2] * s); b.scale.set(0.5, 1, 1);
       const c = mesh(f, new THREE.SphereGeometry(r * 0.6, 16, 12), M.chrome); c.position.set(p[0] + 0.002, p[1], p[2] * s); c.scale.set(0.5, 1, 1);
@@ -153,7 +153,7 @@ export function buildBody(car) {
   // ---------- Parabrezza + tergicristalli ----------
   const pb = part('parabrezza');
   mesh(pb, both(Rx((t) => xCowl(t) + 0.05, xHeader, 0.832, 1), 22, 14), M.glass, false);
-  mesh(pb, both(Rx(xCowl, (t) => xCowl(t) + 0.055, 0.60, 1), 3, 16), M.trim);
+  mesh(pb, both(Rx(xCowl, (t) => xCowl(t) + 0.055, 0.80, 1), 3, 16), M.trim);
   const tg = part('tergicristalli');
   const wiper = (t0, t1, side, dx) => {
     const pts = [];
@@ -225,17 +225,17 @@ export function buildBody(car) {
   // ---------- Fanali posteriori ----------
   for (const s of [1, -1]) {
     const fa = part('fanale_' + sfx(s));
-    mesh(fa, geo(polar(3.3, false, 40, 82, (u) => lerp(0.80, 0.86, u), (u) => lerp(0.985, 1.03, u * u)), 22, 8, { offset: 0.006, side: s }), M.red);
+    mesh(fa, geo(polar(3.3, false, 40, 72, (u) => lerp(0.82, 0.985, Math.pow(u, 1.6)), (u) => lerp(0.99, 1.02, u)), 22, 8, { offset: 0.006, side: s }), M.red);
     const fb = part('fanale_int_' + sfx(s), po);
-    mesh(fb, geo(polar(3.3, false, 17, 39, (u) => lerp(0.845, 0.80, u), (u) => lerp(0.955, 0.985, u)), 14, 6, { offset: 0.006, side: s }), M.red);
-    mesh(fb, geo(polar(3.3, false, 19, 30, 0.865, 0.90), 8, 2, { offset: 0.009, side: s }), M.white, false);
+    mesh(fb, geo(polar(3.3, false, 17, 39, (u) => lerp(0.86, 0.82, u), (u) => lerp(0.96, 0.99, u)), 14, 6, { offset: 0.006, side: s }), M.red);
+    mesh(fb, geo(polar(3.3, false, 19, 30, 0.875, 0.905), 8, 2, { offset: 0.009, side: s }), M.white, false);
   }
 
   // ---------- Paraurti posteriore ----------
   const pp = part('paraurti_post');
   mesh(pp, both(Rx(3.80, L - 0.003, 0.10, 0.5, warpEnd), 30, 22), M.paint);
   mesh(pp, both(Rx((t) => XR(t, 0.70), L - 0.003, 0.5, 1, warpEnd), 22, 22), M.paint);
-  mesh(pp, both(polar(3.3, false, 0, 40, 0.345, 0.47), 20, 5, { offset: 0.004 }), M.trim);
+  mesh(pp, both(polar(3.3, false, 0, 38, 0.33, 0.43), 20, 5, { offset: 0.004 }), M.trim);
   for (const s of [1, -1]) mesh(pp, geo(polar(3.3, false, 44, 58, 0.50, 0.535), 8, 2, { offset: 0.005, side: s }), M.red);
 
   // ---------- Sportello carburante (lato destro) ----------
@@ -253,8 +253,10 @@ export function buildBody(car) {
   mesh(misc, both(Rx(0.003, L - 0.003, 0, 0.10, warpBoth), 60, 6), M.floor);
   mesh(misc, both(Rx(0.24, 1.06, 0.17, 0.5), 20, 12, { offset: -0.035 }), M.inner, false);
   for (const ax of [FA, RA]) for (const s of [1, -1]) {
-    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.362, 0.362, 0.32, 32, 1, true, Math.PI / 2, Math.PI), M.floor);
-    c.rotation.x = Math.PI / 2; c.position.set(ax, WHEEL_Y, 0.67 * s); misc.add(c);
+    const lg = new THREE.PlaneGeometry(1, 1, 28, 1), lp = lg.attributes.position;
+    for (let i = 0; i < lp.count; i++) { const th = (lp.getX(i) + 0.5) * Math.PI * 1.16 - Math.PI * 0.08, zz = 0.52 + (lp.getY(i) + 0.5) * 0.31; lp.setXYZ(i, ax + Math.cos(th) * 0.362, WHEEL_Y + Math.sin(th) * 0.362, zz * s); }
+    lg.computeVertexNormals();
+    const c = new THREE.Mesh(lg, M.floor); misc.add(c);
     const e = new THREE.Mesh(new THREE.CircleGeometry(0.362, 32), M.floor); e.rotation.y = Math.PI / 2 * 0; e.position.set(ax, WHEEL_Y, 0.51 * s); misc.add(e);
   }
 }

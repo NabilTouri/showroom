@@ -189,10 +189,10 @@ export function buildMechanics(car) {
 
   // ===== Scarico =====
   g = part('scarico', false);
-  tube(g, M.steel, 0.026, [[1.0, 0.17, -0.20], [1.10, 0.15, -0.12], [1.5, 0.15, -0.06], [2.6, 0.15, -0.06], [3.1, 0.17, 0.10], [3.45, 0.24, 0.24], [3.6, 0.26, 0.24]]);
+  tube(g, M.steel, 0.026, [[1.0, 0.17, -0.20], [1.10, 0.15, -0.12], [1.5, 0.15, -0.06], [2.6, 0.15, -0.06], [3.1, 0.18, 0.10], [3.45, 0.30, 0.24], [3.6, 0.34, 0.24]]);
   cyl(g, M.steel, 0.05, 0.36, 2.0, 0.15, -0.06, 'x');
-  cyl(g, M.steel, 0.085, 0.36, 3.78, 0.275, 0.24, 'x');
-  tube(g, M.steel, 0.022, [[3.95, 0.26, 0.24], [3.99, 0.24, 0.26], [4.0, 0.20, 0.30]]);
+  cyl(g, M.steel, 0.07, 0.36, 3.76, 0.34, 0.24, 'x');
+  tube(g, M.steel, 0.022, [[3.93, 0.34, 0.24], [3.97, 0.32, 0.26], [3.985, 0.29, 0.29]]);
   g = part('serbatoio', false);
   box(g, M.plasticG, 0.55, 0.20, 0.95, 2.82, 0.285, 0.05, 0.05);
   tube(g, M.plastic, 0.022, [[3.0, 0.33, -0.40], [3.3, 0.55, -0.62], [3.55, 0.82, -0.74]]);
@@ -237,9 +237,9 @@ export function buildMechanics(car) {
   for (const id in car.parts) {
     const p = car.parts[id]; if (!p.userData.explode) continue;
     const c = new THREE.Box3().setFromObject(p).getCenter(new THREE.Vector3()); p.worldToLocal(c);
-    const dir = new THREE.Vector3(c.x + car.root.position.x * 0 - 0.70, 0, c.z).multiplyScalar(1.15);
-    dir.y = 0.25 + Math.max(0, c.y - 0.3) * 1.5;
-    dir.x -= 0.12;
+    const dir = new THREE.Vector3((c.x - 0.70) * 1.7, 0, c.z * 1.9);
+    dir.y = 0.35 + Math.max(0, c.y - 0.25) * 2.4;
+    dir.x -= 0.15;
     p.userData.explodeVec = dir;
   }
 }

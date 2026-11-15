@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { FA, RA, WHEEL_Y, ARCH_R } from './surface.js';
 
 // Scarta i frammenti dentro i passaruota (ritaglio circolare perfetto senza tagliare la mesh)
-function archClip(mat) {
+function archClip(mat, darkBack = false) {
   mat.onBeforeCompile = (sh) => {
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nattribute vec3 cpos;\nvarying vec3 vCpos;')
@@ -16,8 +16,9 @@ function archClip(mat) {
           float r2 = ${(ARCH_R * ARCH_R).toFixed(5)};
           if (dot(a, a) < r2 || dot(b, b) < r2) discard;
         }`);
+    if (darkBack) sh.fragmentShader = sh.fragmentShader.replace('#include <color_fragment>', '#include <color_fragment>\n if (!gl_FrontFacing) diffuseColor.rgb = vec3(0.02);');
   };
-  mat.customProgramCacheKey = () => 'archclip';
+  mat.customProgramCacheKey = () => 'archclip' + darkBack;
   mat.userData.archClip = true;
   return mat;
 }
@@ -40,14 +41,14 @@ export const COLORS = {
 };
 
 export const M = {
-  paint: archClip(P({ color: 0xa30d14, metalness: 0.55, roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.04, side: DS })),
+  paint: archClip(P({ color: 0xa30d14, metalness: 0.45, roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 0.85, side: DS }), true),
   inner: archClip(St({ color: 0x17181a, roughness: 0.85, metalness: 0.1, side: DS })),
   trim: archClip(St({ color: 0x0c0c0d, roughness: 0.6, metalness: 0.1, side: DS })),
   gloss: P({ color: 0x050506, roughness: 0.08, metalness: 0.2, clearcoat: 1, side: DS }),
   glass: P({ color: 0x1b2a30, roughness: 0.03, metalness: 0.1, transparent: true, opacity: 0.38, side: DS, depthWrite: false, envMapIntensity: 1.6 }),
-  lens: P({ color: 0xdfe8ee, roughness: 0.02, metalness: 0.1, transparent: true, opacity: 0.32, side: DS, depthWrite: false, clearcoat: 1, envMapIntensity: 2 }),
+  lens: P({ color: 0xdfe8ee, roughness: 0.02, metalness: 0.1, transparent: true, opacity: 0.16, side: DS, depthWrite: false, clearcoat: 1, envMapIntensity: 2 }),
   lampIn: St({ color: 0xc8ccd0, roughness: 0.15, metalness: 1, side: DS }),
-  red: P({ color: 0x4a0306, roughness: 0.05, metalness: 0.3, emissive: 0x4a0003, clearcoat: 1, side: DS }),
+  red: P({ color: 0x5c040a, roughness: 0.05, metalness: 0.25, emissive: 0x3a0002, clearcoat: 1, side: DS }),
   amber: P({ color: 0xff8a00, roughness: 0.1, emissive: 0x301400, side: DS }),
   led: St({ color: 0xffffff, emissive: 0xdfeaff, emissiveIntensity: 1.6, roughness: 0.3, side: DS }),
   chrome: St({ color: 0xe6e8ea, roughness: 0.08, metalness: 1, side: DS }),
