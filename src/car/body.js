@@ -82,8 +82,8 @@ export function buildBody(car) {
 
   // ---------- Paraurti anteriore ----------
   const pa = part('paraurti_ant');
-  mesh(pa, both(Rx(0.003, 0.52, 0.10, 0.585, warpStart), 44, 26), M.paint);
-  mesh(pa, both(Rx(0.003, (t) => xHoodLead(t) + 0.03, 0.5, 1, warpStart), 26, 22), M.paint);
+  mesh(pa, both(Rx(1e-6, 0.52, 0, 0.585, warpStart), 56, 30), M.paint);
+  mesh(pa, both(Rx(1e-6, (t) => xHoodLead(t) + 0.03, 0.5, 1, warpStart), 26, 22), M.paint);
   // presa d'aria inferiore
   mesh(pa, both(polar(1.0, true, 0, 23, 0.27, 0.42), 20, 6, { offset: 0.004 }), M.trim);
   // targa
@@ -225,16 +225,18 @@ export function buildBody(car) {
   // ---------- Fanali posteriori ----------
   for (const s of [1, -1]) {
     const fa = part('fanale_' + sfx(s));
+    mesh(fa, geo(polar(3.3, false, 39, 74, (u) => lerp(0.805, 0.985, Math.pow(u, 1.6)), (u) => lerp(1.0, 1.03, u)), 22, 8, { offset: 0.003, side: s }), M.gloss);
     mesh(fa, geo(polar(3.3, false, 40, 72, (u) => lerp(0.82, 0.985, Math.pow(u, 1.6)), (u) => lerp(0.99, 1.02, u)), 22, 8, { offset: 0.006, side: s }), M.red);
     const fb = part('fanale_int_' + sfx(s), po);
+    mesh(fb, geo(polar(3.3, false, 15.5, 39, (u) => lerp(0.85, 0.805, u), (u) => lerp(0.97, 1.0, u)), 14, 6, { offset: 0.003, side: s }), M.gloss);
     mesh(fb, geo(polar(3.3, false, 17, 39, (u) => lerp(0.86, 0.82, u), (u) => lerp(0.96, 0.99, u)), 14, 6, { offset: 0.006, side: s }), M.red);
     mesh(fb, geo(polar(3.3, false, 19, 30, 0.875, 0.905), 8, 2, { offset: 0.009, side: s }), M.white, false);
   }
 
   // ---------- Paraurti posteriore ----------
   const pp = part('paraurti_post');
-  mesh(pp, both(Rx(3.80, L - 0.003, 0.10, 0.5, warpEnd), 30, 22), M.paint);
-  mesh(pp, both(Rx((t) => XR(t, 0.70), L - 0.003, 0.5, 1, warpEnd), 22, 22), M.paint);
+  mesh(pp, both(Rx(3.80, L - 1e-6, 0, 0.5, warpEnd), 40, 26), M.paint);
+  mesh(pp, both(Rx((t) => XR(t, 0.70), L - 1e-6, 0.5, 1, warpEnd), 22, 22), M.paint);
   mesh(pp, both(polar(3.3, false, 0, 38, 0.33, 0.43), 20, 5, { offset: 0.004 }), M.trim);
   for (const s of [1, -1]) mesh(pp, geo(polar(3.3, false, 44, 58, 0.50, 0.535), 8, 2, { offset: 0.005, side: s }), M.red);
 
@@ -250,7 +252,7 @@ export function buildBody(car) {
 
   // ---------- Fondo, passaruota, pareti vano motore ----------
   const misc = new THREE.Group(); root.add(misc);
-  mesh(misc, both(Rx(0.003, L - 0.003, 0, 0.10, warpBoth), 60, 6), M.floor);
+  mesh(misc, both(Rx(0.45, 3.85, 0, 0.10), 60, 6), M.floor);
   mesh(misc, both(Rx(0.24, 1.06, 0.17, 0.5), 20, 12, { offset: -0.035 }), M.inner, false);
   for (const ax of [FA, RA]) for (const s of [1, -1]) {
     const lg = new THREE.PlaneGeometry(1, 1, 28, 1), lp = lg.attributes.position;

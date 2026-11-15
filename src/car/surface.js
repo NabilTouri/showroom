@@ -91,7 +91,7 @@ function sec(x, t) {
 const bump = (v) => { v = clamp(v, -1, 1); const c = 1 - v * v; return c * c; };
 
 export function S(x, t) {
-  x = clamp(x, 1e-4, L - 1e-4); t = clamp(t, 0, 1);
+  x = clamp(x, 1e-7, L - 1e-7); t = clamp(t, 0, 1);
   let [z, y] = sec(x, t);
   if (t > 0.15 && t < 0.52) {
     // scalfatura bassa sulle porte (firma stilistica Clio IV)
@@ -138,7 +138,7 @@ export function polarSolver(xc, front) {
     if (last) [x, t] = last;
     else {
       for (let i = 0; i <= 50; i++) for (let j = 0; j <= 40; j++) {
-        const xx = lerp(lo, hi, (i / 50) ** (front ? 2 : 0.5)), tt = lerp(0.1, 1, j / 40);
+        const xx = lerp(lo, hi, (i / 50) ** (front ? 2 : 0.5)), tt = lerp(0, 1, j / 40);
         const f = F(xx, tt), e = (f[0] - theta) ** 2 + ((f[1] - y) * 2) ** 2;
         if (e < best) { best = e; x = xx; t = tt; }
       }
@@ -146,12 +146,12 @@ export function polarSolver(xc, front) {
     for (let k = 0; k < 30; k++) {
       const f = F(x, t), e0 = f[0] - theta, e1 = f[1] - y;
       if (Math.abs(e0) < 1e-5 && Math.abs(e1) < 1e-5) break;
-      const h = 1e-4, fx = F(x + h, t), ft = F(x, t + (t > 0.5 ? -h : h)), st = t > 0.5 ? -h : h;
-      const a = (fx[0] - f[0]) / h, b = (ft[0] - f[0]) / st, c = (fx[1] - f[1]) / h, d = (ft[1] - f[1]) / st;
+      const h = 1e-4, fx = F(x + (x > (lo + hi) / 2 ? -h : h), t), ft = F(x, t + (t > 0.5 ? -h : h)), st = t > 0.5 ? -h : h, sx = x > (lo + hi) / 2 ? -h : h;
+      const a = (fx[0] - f[0]) / sx, b = (ft[0] - f[0]) / st, c = (fx[1] - f[1]) / sx, d = (ft[1] - f[1]) / st;
       const det = a * d - b * c; if (Math.abs(det) < 1e-12) break;
       let dx = -(d * e0 - b * e1) / det, dt = -(-c * e0 + a * e1) / det;
       const sc = Math.min(1, 0.06 / Math.abs(dx || 1e-9), 0.06 / Math.abs(dt || 1e-9));
-      x = clamp(x + dx * sc, lo, hi); t = clamp(t + dt * sc, 0.02, 1);
+      x = clamp(x + dx * sc, lo, hi); t = clamp(t + dt * sc, 0, 1);
     }
     last = [x, t];
     return [x, t];
@@ -198,6 +198,6 @@ export const Rt = (x0, x1, ta, tb) => (u, v) => {
   const x = lerp(x0, x1, u);
   return [x, lerp(val(ta, x), val(tb, x), v)];
 };
-export const warpStart = (u) => Math.pow(u, 2.3);
-export const warpEnd = (u) => 1 - Math.pow(1 - u, 2.6);
+export const warpStart = (u) => Math.pow(u, 3.2);
+export const warpEnd = (u) => 1 - Math.pow(1 - u, 3.4);
 export const warpBoth = (u) => (u < 0.5 ? 0.5 * Math.pow(2 * u, 2.3) : 1 - 0.5 * Math.pow(2 * (1 - u), 2.6));

@@ -48,7 +48,7 @@ export const M = {
   glass: P({ color: 0x1b2a30, roughness: 0.03, metalness: 0.1, transparent: true, opacity: 0.38, side: DS, depthWrite: false, envMapIntensity: 1.6 }),
   lens: P({ color: 0xdfe8ee, roughness: 0.02, metalness: 0.1, transparent: true, opacity: 0.16, side: DS, depthWrite: false, clearcoat: 1, envMapIntensity: 2 }),
   lampIn: St({ color: 0xc8ccd0, roughness: 0.15, metalness: 1, side: DS }),
-  red: P({ color: 0x5c040a, roughness: 0.05, metalness: 0.25, emissive: 0x3a0002, clearcoat: 1, side: DS }),
+  red: P({ color: 0xd0121c, roughness: 0.04, metalness: 0.0, emissive: 0x5a0004, clearcoat: 1, side: DS }),
   amber: P({ color: 0xff8a00, roughness: 0.1, emissive: 0x301400, side: DS }),
   led: St({ color: 0xffffff, emissive: 0xdfeaff, emissiveIntensity: 1.6, roughness: 0.3, side: DS }),
   chrome: St({ color: 0xe6e8ea, roughness: 0.08, metalness: 1, side: DS }),
