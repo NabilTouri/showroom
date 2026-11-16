@@ -1,30 +1,51 @@
 // test UI: node tools/ui.mjs
 import { createRequire } from 'module';
 const { chromium } = createRequire(import.meta.url)(process.env.PW || 'playwright');
-const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const b = await chromium.launch({
+  args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+});
 const p = await b.newPage({ viewport: { width: 1440, height: 820 } });
 const errs = [];
-p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-p.on('pageerror', e => errs.push('PAGEERR ' + e.message));
+p.on('console', (m) => {
+  if (m.type() === 'error') errs.push(m.text());
+});
+p.on('pageerror', (e) => errs.push('PAGEERR ' + e.message));
 await p.goto(process.env.URL || 'http://localhost:5173/');
 await p.waitForFunction(() => window.__app, null, { timeout: 90000 });
 await p.waitForTimeout(1500);
 await p.screenshot({ path: 'shots/ui0.png' });
-await p.mouse.click(760, 470); await p.waitForTimeout(1500);
+await p.mouse.click(760, 470);
+await p.waitForTimeout(1500);
 await p.screenshot({ path: 'shots/ui1.png' });
-await p.click('text=Motore >> nth=0'); await p.waitForTimeout(4000);
-await p.evaluate(() => window.__app.select('turbo', { focus: true })); await p.waitForTimeout(4000);
+await p.click('text=Motore >> nth=0');
+await p.waitForTimeout(4000);
+await p.evaluate(() => window.__app.select('turbo', { focus: true }));
+await p.waitForTimeout(4000);
 await p.screenshot({ path: 'shots/ui2.png' });
-await p.click('#btn-explode'); await p.waitForTimeout(5000);
+await p.click('#btn-explode');
+await p.waitForTimeout(5000);
 await p.screenshot({ path: 'shots/ui3.png' });
-await p.click('#btn-explode'); await p.click('#btn-xray'); await p.evaluate(() => { window.__app.select(null); window.__app.goView('3/4'); }); await p.waitForTimeout(4000);
+await p.click('#btn-explode');
+await p.click('#btn-xray');
+await p.evaluate(() => {
+  window.__app.select(null);
+  window.__app.goView('3/4');
+});
+await p.waitForTimeout(4000);
 await p.screenshot({ path: 'shots/ui4.png' });
-await p.click('#btn-xray'); await p.click('#btn-openall'); await p.waitForTimeout(4000);
+await p.click('#btn-xray');
+await p.click('#btn-openall');
+await p.waitForTimeout(4000);
 await p.screenshot({ path: 'shots/ui5.png' });
 // integrita' dati
-const miss = await p.evaluate(() => Object.keys(window.__app.car.parts).filter(id => !window.__app.info[id]));
+const miss = await p.evaluate(() =>
+  Object.keys(window.__app.car.parts).filter((id) => !window.__app.info[id]),
+);
 console.log('parti senza scheda:', miss.join(', ') || 'nessuna');
 console.log('errori:', errs.length ? errs.join('\n') : 'nessuno');
-await p.setViewportSize({ width: 390, height: 780 }); await p.click('#btn-openall'); await p.evaluate(() => window.__app.select('batteria', { focus: true })); await p.waitForTimeout(4000);
+await p.setViewportSize({ width: 390, height: 780 });
+await p.click('#btn-openall');
+await p.evaluate(() => window.__app.select('batteria', { focus: true }));
+await p.waitForTimeout(4000);
 await p.screenshot({ path: 'shots/ui6.png' });
 await b.close();

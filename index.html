@@ -1,62 +1,70 @@
 <!doctype html>
 <html lang="it">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#101216">
-<title>Clio IV 1.5 dCi 75 — Esploratore 3D</title>
-<link rel="stylesheet" href="/src/style.css">
-</head>
-<body>
-<canvas id="view"></canvas>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101216" />
+    <title>Clio IV 1.5 dCi 75 — Esploratore 3D</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <canvas id="view"></canvas>
 
-<header id="topbar">
-  <div class="brand"><span class="logo">◆</span><div><b>Clio IV</b><small>2016 · 1.5 dCi 75 CV · K9K</small></div></div>
-  <div class="tools">
-    <div class="group" id="views"></div>
-    <div class="group">
-      <button id="btn-openall" title="Apri o chiudi tutte le aperture">Apri tutto</button>
-      <div class="menu">
-        <button id="btn-openmenu">Aperture ▾</button>
-        <div class="pop" id="openables"></div>
+    <header id="topbar">
+      <div class="brand">
+        <span class="logo">◆</span>
+        <div><b>Clio IV</b><small>2016 · 1.5 dCi 75 CV · K9K</small></div>
       </div>
-      <div class="menu">
-        <button id="btn-lightmenu">Luci ▾</button>
-        <div class="pop" id="lights"></div>
+      <div class="tools">
+        <div class="group" id="views"></div>
+        <div class="group">
+          <button id="btn-openall" title="Apri o chiudi tutte le aperture">Apri tutto</button>
+          <div class="menu">
+            <button id="btn-openmenu">Aperture ▾</button>
+            <div class="pop" id="openables"></div>
+          </div>
+          <div class="menu">
+            <button id="btn-lightmenu">Luci ▾</button>
+            <div class="pop" id="lights"></div>
+          </div>
+        </div>
+        <div class="group">
+          <button id="btn-xray" title="Carrozzeria trasparente">Raggi X</button>
+          <button id="btn-explode" title="Vista esplosa del vano motore">Esplodi motore</button>
+          <button id="btn-showall" hidden>Mostra tutto</button>
+          <button id="btn-quality" title="Cambia la qualità grafica (Alta, Media, Bassa)">
+            Qualità
+          </button>
+        </div>
+        <div class="group">
+          <div class="menu">
+            <button id="btn-colormenu">Colore ▾</button>
+            <div class="pop" id="colors"></div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="group">
-      <button id="btn-xray" title="Carrozzeria trasparente">Raggi X</button>
-      <button id="btn-explode" title="Vista esplosa del vano motore">Esplodi motore</button>
-      <button id="btn-showall" hidden>Mostra tutto</button>
-      <button id="btn-quality" title="Cambia la qualità grafica (Alta, Media, Bassa)">Qualità</button>
-    </div>
-    <div class="group">
-      <div class="menu">
-        <button id="btn-colormenu">Colore ▾</button>
-        <div class="pop" id="colors"></div>
+      <button id="btn-list" class="only-mobile" aria-label="Elenco componenti">☰</button>
+    </header>
+
+    <aside id="list">
+      <div class="list-head">
+        <input id="search" type="search" placeholder="Cerca componente…" autocomplete="off" />
+        <button id="btn-vehicle" title="Scheda tecnica dell'auto">Scheda auto</button>
       </div>
+      <div id="cats"></div>
+    </aside>
+
+    <aside id="panel" hidden>
+      <button id="panel-close" aria-label="Chiudi">×</button>
+      <div id="panel-body"></div>
+    </aside>
+
+    <div id="tip" hidden></div>
+    <div id="hint">
+      Trascina per ruotare · rotellina/pizzico per zoom · clic su un pezzo per i dettagli · doppio
+      clic su porte, cofano e baule per aprirli
     </div>
-  </div>
-  <button id="btn-list" class="only-mobile" aria-label="Elenco componenti">☰</button>
-</header>
-
-<aside id="list">
-  <div class="list-head">
-    <input id="search" type="search" placeholder="Cerca componente…" autocomplete="off">
-    <button id="btn-vehicle" title="Scheda tecnica dell'auto">Scheda auto</button>
-  </div>
-  <div id="cats"></div>
-</aside>
-
-<aside id="panel" hidden>
-  <button id="panel-close" aria-label="Chiudi">×</button>
-  <div id="panel-body"></div>
-</aside>
-
-<div id="tip" hidden></div>
-<div id="hint">Trascina per ruotare · rotellina/pizzico per zoom · clic su un pezzo per i dettagli · doppio clic su porte, cofano e baule per aprirli</div>
-<div id="loading">Costruzione del modello…</div>
-<script type="module" src="/src/main.js"></script>
-</body>
+    <div id="loading">Costruzione del modello…</div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
