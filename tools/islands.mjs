@@ -1,4 +1,4 @@
-// uso: node tools/islands.mjs <file.glb> <nodo> [materiale] — isole connesse di una mesh, in coordinate auto
+// Usage: node tools/islands.mjs <file.glb> <node> [material] — connected triangle islands of a mesh, in car coordinates
 import fs from 'fs';
 const [file, nodeName, matName] = process.argv.slice(2);
 const buf = fs.readFileSync(file),
@@ -61,7 +61,7 @@ for (const ci of node.children) {
       }
     }
   }
-  console.log(`-- ${mn}: ${idx.length / 3} tri, ${isl.size} isole`);
+  console.log(`-- ${mn}: ${idx.length / 3} tri, ${isl.size} islands`);
   [...isl.values()]
     .sort((a, b) => b.tris - a.tris)
     .slice(0, 40)

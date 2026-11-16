@@ -1,4 +1,4 @@
-// uso: node tools/inspect-glb.mjs <file.glb>  — elenca nodi, mesh, materiali e ingombri
+// Usage: node tools/inspect-glb.mjs <file.glb> — lists nodes, meshes, materials and bounds
 import fs from 'fs';
 const buf = fs.readFileSync(process.argv[2]);
 const jlen = buf.readUInt32LE(12);
