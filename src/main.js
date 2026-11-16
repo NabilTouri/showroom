@@ -6,7 +6,7 @@ import { buildWheels } from './car/wheels.js';
 import { buildMechanics } from './car/engine.js';
 import { buildInterior } from './car/interior.js';
 import { L } from './car/surface.js';
-import { M, COLORS, inArch } from './car/materials.js';
+import { M, COLORS } from './car/materials.js';
 import { CATEGORIES, VEHICLE, getPart } from './data/parts.js';
 
 const $ = (s) => document.querySelector(s);
@@ -54,14 +54,14 @@ scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x30343a, 0.35));
 const car = { root: new THREE.Group(), parts: {}, openables: {} };
 car.root.position.x = -L / 2;
 scene.add(car.root);
-buildBody(car); buildWheels(car); buildInterior(car); buildMechanics(car);
+await buildBody(car); buildWheels(car); buildInterior(car); buildMechanics(car);
 car.root.traverse((o) => { if (o.isMesh) { o.receiveShadow = false; } });
 car.root.updateMatrixWorld(true);
 
 const info = {};           // id scena -> scheda
 for (const id in car.parts) { const p = getPart(id); if (p) info[id] = p; }
 const BODY_CATS = new Set(['Carrozzeria', 'Luci e vetri']);
-const OPEN_LABEL = { cofano: 'Cofano', porta_ant_sx: 'Porta ant. sinistra', porta_ant_dx: 'Porta ant. destra', porta_post_sx: 'Porta post. sinistra', porta_post_dx: 'Porta post. destra', portellone: 'Portellone', sportello_carburante: 'Sportello carburante' };
+const OPEN_LABEL = { cofano: 'Cofano', porta_ant_sx: 'Porta ant. sinistra', porta_ant_dx: 'Porta ant. destra', porta_post_sx: 'Porta post. sinistra', porta_post_dx: 'Porta post. destra', portellone: 'Portellone' };
 
 // ---------- Stato ----------
 const state = { selected: null, hover: null, xray: false, explode: 0, explodeTarget: 0, hidden: new Set() };
@@ -177,7 +177,6 @@ function partAt(ev) {
   const ndc = new THREE.Vector2(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(ndc, camera);
   const hits = ray.intersectObject(car.root, true);
-  const lp = new THREE.Vector3();
   for (const h of hits) {
     const o = h.object;
     const base = origMat.get(o) || o.material;
@@ -186,16 +185,6 @@ function partAt(ev) {
     let id = null, vis = true;
     for (let p = o; p && p !== car.root; p = p.parent) { if (!p.visible) vis = false; if (!id && p.userData.partId) id = p.userData.partId; }
     if (!vis) continue;
-    if (!Array.isArray(base) && base.userData.archClip && o.geometry.attributes.cpos) {
-      // punto in coordinate "auto a riposo": interpolazione baricentrica dell'attributo cpos
-      const a = o.geometry.attributes.cpos, f = h.face; if (f) {
-        const bc = THREE.Triangle.getInterpolation ? null : null;
-        const pa = new THREE.Vector3().fromBufferAttribute(o.geometry.attributes.position, f.a), pb = new THREE.Vector3().fromBufferAttribute(o.geometry.attributes.position, f.b), pc = new THREE.Vector3().fromBufferAttribute(o.geometry.attributes.position, f.c);
-        const bary = new THREE.Vector3(); THREE.Triangle.getBarycoord(o.worldToLocal(lp.copy(h.point)), pa, pb, pc, bary);
-        const x = a.getX(f.a) * bary.x + a.getX(f.b) * bary.y + a.getX(f.c) * bary.z, y = a.getY(f.a) * bary.x + a.getY(f.b) * bary.y + a.getY(f.c) * bary.z, z = a.getZ(f.a) * bary.x + a.getZ(f.b) * bary.y + a.getZ(f.c) * bary.z;
-        if (inArch(x, y, z)) continue;
-      }
-    }
     if (!id) { if (state.xray) continue; return null; }
     if (state.xray && info[id] && BODY_CATS.has(info[id].cat) && !isOpenPanelHit(id)) continue;
     return info[id] ? id : null;
@@ -302,7 +291,7 @@ function renderPanel(id) {
 function renderVehicle() {
   select(null);
   const body = $('#panel-body');
-  body.innerHTML = `<div class="pb" style="padding-top:18px"><span class="chip">Scheda auto</span><h2>${esc(VEHICLE.name)}</h2><p>Quarta generazione della Clio (2012–2019), modello 2016 con il turbodiesel 1.5 dCi da 75 CV. Clicca un componente nel modello o nell'elenco per vederne funzione, dati, manutenzione e ricambi.</p><h3>Dati tecnici</h3><table class="sp">${VEHICLE.specs.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table><p class="note">Valori indicativi: possono variare secondo allestimento, omologazione e anno di produzione.</p></div>`;
+  body.innerHTML = `<div class="pb" style="padding-top:18px"><span class="chip">Scheda auto</span><h2>${esc(VEHICLE.name)}</h2><p>Quarta generazione della Clio (2012–2019), modello 2016 con il turbodiesel 1.5 dCi da 75 CV. Clicca un componente nel modello o nell'elenco per vederne funzione, dati, manutenzione e ricambi.</p><h3>Dati tecnici</h3><table class="sp">${VEHICLE.specs.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table><p class="note">Valori indicativi: possono variare secondo allestimento, omologazione e anno di produzione.</p><p class="note">Modello 3D della carrozzeria: «Renault Clio MK4 2012-2020» di <a href="https://sketchfab.com/3d-models/renault-clio-mk4-2012-2020-70a12bd8056647c7a4226f6fa7171c15" target="_blank" rel="noopener">Merc_TV su Sketchfab</a>, licenza <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Vano motore, meccanica e ruote sono ricostruzioni aggiunte.</p></div>`;
   $('#panel').hidden = false;
 }
 $('#panel-close').onclick = () => { select(null); $('#panel').hidden = true; };

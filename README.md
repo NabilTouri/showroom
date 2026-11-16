@@ -17,15 +17,15 @@ npm run build    # sito statico in dist/
 
 ## Struttura
 
-- `src/car/surface.js` — superficie parametrica della carrozzeria (quote ufficiali: 4062 × 1732 × 1448 mm, passo 2589 mm)
-- `src/car/body.js` — pannelli, vetri, luci e aperture ricavati dalla superficie
-- `src/car/engine.js` — vano motore K9K, trasmissione, scarico, sospensioni
-- `src/car/interior.js`, `src/car/wheels.js` — abitacolo e ruote
+- `public/models/clio_mk4.glb` — modello 3D della carrozzeria e degli interni (vedi `CREDITS.md`)
+- `src/car/body.js` — carica il modello, collega ogni pezzo alla sua scheda e monta porte, cofano e portellone sui perni
+- `src/car/engine.js` — vano motore K9K, trasmissione, scarico, sospensioni (ricostruiti in codice)
+- `src/car/wheels.js`, `src/car/interior.js` — ruote e componenti nascosti
 - `src/data/parts.js` — schede dei componenti
 - `src/main.js` — scena, interazione e interfaccia
 
 ## Note
 
-Il modello è costruito interamente in codice (nessun file 3D esterno): è una ricostruzione fedele nelle
-proporzioni ma semplificata nei dettagli. I dati tecnici, gli intervalli di manutenzione e soprattutto i
+La carrozzeria è il modello «Renault Clio MK4 2012-2020» di Merc_TV (CC BY 4.0). Vano motore e meccanica sono
+ricostruzioni semplificate fatte in codice. I dati tecnici, gli intervalli di manutenzione e soprattutto i
 codici OEM sono indicativi: quelli marcati «da verificare» vanno controllati con il numero di telaio.

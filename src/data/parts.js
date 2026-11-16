@@ -222,7 +222,7 @@ P('portellone', 'Portellone posteriore', 'Carrozzeria', 'Dà accesso al bagaglia
 P('paraurti_ant', 'Paraurti anteriore', 'Carrozzeria', 'Scudo in plastica verniciata che integra calandra, presa d\'aria inferiore, luci diurne e targa. Dietro ci sono la traversa in acciaio e gli assorbitori d\'urto.', {});
 P('paraurti_post', 'Paraurti posteriore', 'Carrozzeria', 'Scudo posteriore in plastica con catadiottri e fascia inferiore nera. Può ospitare i sensori di parcheggio.', {});
 P('parafango', 'Parafango anteriore', 'Carrozzeria', 'Pannello imbullonato (sostituibile senza saldature) che copre la ruota anteriore. All\'interno c\'è il passaruota in plastica.', {});
-P('fiancata', 'Fiancata e montanti', 'Carrozzeria', 'Parte strutturale della scocca: brancardo sotto le porte, montanti del tetto e parafango posteriore, saldati in un pezzo unico. La scalfatura bassa sulle porte è la firma stilistica della Clio IV (design Laurens van den Acker).', {});
+P('fiancata', 'Scocca (tetto, montanti, fiancate)', 'Carrozzeria', 'Parte strutturale dell\'auto in lamiera saldata: tetto, montanti, brancardi sotto le porte e parafanghi posteriori formano un pezzo unico. La scalfatura bassa sulle porte è la firma stilistica della Clio IV (design Laurens van den Acker).', {});
 P('tetto', 'Tetto', 'Carrozzeria', 'Padiglione in lamiera con antenna radio corta in coda.', {});
 P('calandra', 'Calandra e logo', 'Carrozzeria', 'Fascia nero lucido che unisce i due fari con al centro la grande losanga Renault in verticale: il «volto» inaugurato proprio dalla Clio IV.', {});
 P('specchio', 'Specchio retrovisore', 'Carrozzeria', 'Regolabile elettricamente e riscaldato; integra l\'indicatore di direzione laterale.', { oem: [['Vetro specchio', '—', true]] });
@@ -241,12 +241,13 @@ P('vetro_post', 'Vetro porta posteriore', 'Luci e vetri', 'Cristallo discendente
 P('lunotto', 'Lunotto termico', 'Luci e vetri', 'Vetro posteriore con resistenza di sbrinamento e tergilunotto.', {});
 
 // ================= ABITACOLO =================
-P('plancia', 'Plancia', 'Abitacolo', 'Cruscotto con schermo multimediale centrale (Media Nav o R-Link da 7"), bocchette, comandi clima e cassetto portaoggetti. La presa diagnosi OBD è in basso, lato guida.', {});
+P('plancia', 'Plancia e interni', 'Abitacolo', 'Cruscotto con schermo multimediale centrale (Media Nav o R-Link da 7"), bocchette, comandi clima e cassetto portaoggetti. La presa diagnosi OBD è in basso, lato guida.', {});
 P('quadro_strumenti', 'Quadro strumenti', 'Abitacolo', 'Tachimetro digitale centrale con contagiri e livello carburante ai lati, computer di bordo e spie.', { specs: [['Spia chiave inglese', 'tagliando in scadenza'], ['Spia «molla» gialla', 'preriscaldo candelette / anomalia iniezione se lampeggia']] });
 P('volante', 'Volante e airbag guidatore', 'Abitacolo', 'Volante regolabile in altezza e profondità con airbag frontale; i comandi radio sono sul satellite dietro la razza destra, quelli del regolatore di velocità sul volante.', {});
 P('leva_cambio', 'Leva cambio e freno a mano', 'Abitacolo', 'Leva del cambio a 5 marce (retromarcia sollevando l\'anello sotto il pomello) e freno a mano meccanico a cavo.', {});
 P('pedaliera', 'Pedaliera', 'Abitacolo', 'Frizione (idraulica), freno e acceleratore elettronico (potenziometro, senza cavo).', {});
 P('sedile_ant', 'Sedile anteriore', 'Abitacolo', 'Sedile con poggiatesta regolabile e airbag laterale nello schienale; quello del guidatore è regolabile in altezza.', {});
+P('sedili', 'Sedili', 'Abitacolo', 'Sedili anteriori con poggiatesta regolabili e airbag laterali negli schienali (quello del guidatore è regolabile in altezza) e divano posteriore a tre posti con schienale abbattibile e attacchi Isofix sui posti laterali.', { specs: [['Bagagliaio', '300 litri, 1.146 con schienale abbattuto']] });
 P('divano_post', 'Divano posteriore', 'Abitacolo', 'Panca a tre posti con schienale abbattibile (frazionato 60/40 secondo allestimento) e attacchi Isofix sui posti laterali.', {});
 P('cappelliera', 'Cappelliera', 'Abitacolo', 'Ripiano rigido rimovibile che copre il bagagliaio.', {});
 P('filtro_abitacolo', 'Filtro abitacolo (antipolline)', 'Abitacolo', 'Filtra l\'aria che entra dalle bocchette. Si sfila lateralmente dal gruppo riscaldamento, dal vano piedi del passeggero.', { where: 'Dietro la plancia, accessibile dal lato passeggero in basso.', maint: ['Sostituzione ogni anno o 15.000–30.000 km: se intasato i vetri si appannano e il clima rende meno.'], oem: [['Filtro abitacolo', '27 27 730 16R', true]] });

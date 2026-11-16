@@ -1,31 +1,12 @@
 import * as THREE from 'three';
-import { FA, RA, WHEEL_Y, ARCH_R } from './surface.js';
 
-// Scarta i frammenti dentro i passaruota (ritaglio circolare perfetto senza tagliare la mesh)
-function archClip(mat, darkBack = false) {
+// Vernice: il lato interno dei pannelli (visibile a porte aperte o attraverso i vetri) resta scuro
+function darkBack(mat) {
   mat.onBeforeCompile = (sh) => {
-    sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nattribute vec3 cpos;\nvarying vec3 vCpos;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvCpos = cpos;');
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vCpos;')
-      .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
-        if (abs(vCpos.z) > 0.45) {
-          vec2 a = vCpos.xy - vec2(${FA.toFixed(4)}, ${WHEEL_Y.toFixed(4)});
-          vec2 b = vCpos.xy - vec2(${RA.toFixed(4)}, ${WHEEL_Y.toFixed(4)});
-          float r2 = ${(ARCH_R * ARCH_R).toFixed(5)};
-          if (dot(a, a) < r2 || dot(b, b) < r2) discard;
-        }`);
-    if (darkBack) sh.fragmentShader = sh.fragmentShader.replace('#include <color_fragment>', '#include <color_fragment>\n if (!gl_FrontFacing) diffuseColor.rgb = vec3(0.02);');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <color_fragment>', '#include <color_fragment>\n if (!gl_FrontFacing) diffuseColor.rgb = vec3(0.02);');
   };
-  mat.customProgramCacheKey = () => 'archclip' + darkBack;
-  mat.userData.archClip = true;
+  mat.customProgramCacheKey = () => 'darkback';
   return mat;
-}
-export function inArch(x, y, z) {
-  if (Math.abs(z) < 0.45) return false;
-  const r2 = ARCH_R * ARCH_R;
-  return (x - FA) ** 2 + (y - WHEEL_Y) ** 2 < r2 || (x - RA) ** 2 + (y - WHEEL_Y) ** 2 < r2;
 }
 
 const P = (o) => new THREE.MeshPhysicalMaterial(o);
@@ -41,13 +22,17 @@ export const COLORS = {
 };
 
 export const M = {
-  paint: archClip(P({ color: 0xa30d14, metalness: 0.45, roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 0.85, side: DS }), true),
-  inner: archClip(St({ color: 0x17181a, roughness: 0.85, metalness: 0.1, side: DS })),
-  trim: archClip(St({ color: 0x0c0c0d, roughness: 0.6, metalness: 0.1, side: DS })),
+  paint: darkBack(P({ color: 0xa30d14, metalness: 0.45, roughness: 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 0.85, side: DS })),
+  inner: St({ color: 0x17181a, roughness: 0.85, metalness: 0.1, side: DS }),
+  trim: St({ color: 0x0d0d0e, roughness: 0.42, metalness: 0.15, side: DS }),
   gloss: P({ color: 0x050506, roughness: 0.08, metalness: 0.2, clearcoat: 1, side: DS }),
   glass: P({ color: 0x1b2a30, roughness: 0.03, metalness: 0.1, transparent: true, opacity: 0.38, side: DS, depthWrite: false, envMapIntensity: 1.6 }),
   lens: P({ color: 0xdfe8ee, roughness: 0.02, metalness: 0.1, transparent: true, opacity: 0.16, side: DS, depthWrite: false, clearcoat: 1, envMapIntensity: 2 }),
   lampIn: St({ color: 0xc8ccd0, roughness: 0.15, metalness: 1, side: DS }),
+  redLens: P({ color: 0xc8101a, roughness: 0.03, metalness: 0, transparent: true, opacity: 0.78, side: DS, clearcoat: 1, emissive: 0x3a0002, envMapIntensity: 1.6 }),
+  redIn: St({ color: 0x7a0a10, roughness: 0.2, metalness: 0.8, side: DS }),
+  bulb: St({ color: 0xffffff, emissive: 0xfff4d8, emissiveIntensity: 0.9, roughness: 0.2, metalness: 0.3, side: DS }),
+  cabin: St({ color: 0x1b1c1f, roughness: 0.8, side: DS }),
   red: P({ color: 0xd0121c, roughness: 0.04, metalness: 0.0, emissive: 0x5a0004, clearcoat: 1, side: DS }),
   amber: P({ color: 0xff8a00, roughness: 0.1, emissive: 0x301400, side: DS }),
   led: St({ color: 0xffffff, emissive: 0xdfeaff, emissiveIntensity: 1.6, roughness: 0.3, side: DS }),
@@ -65,7 +50,7 @@ export const M = {
   blue: St({ color: 0x1f5fd0, roughness: 0.5 }),
   redP: St({ color: 0xc0181c, roughness: 0.5 }),
   white: P({ color: 0xe8e6da, roughness: 0.4, transparent: true, opacity: 0.85, side: DS }),
-  fabric: St({ color: 0x232428, roughness: 0.95 }),
+  fabric: St({ color: 0x232428, roughness: 0.95, side: DS }),
   fabric2: St({ color: 0x34363c, roughness: 0.95 }),
   floor: St({ color: 0x101011, roughness: 1, side: DS }),
   rim: St({ color: 0xc9ccd0, roughness: 0.25, metalness: 1 }),

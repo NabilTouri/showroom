@@ -78,3 +78,5 @@ ul.faults li::marker{color:var(--warn)}
   .pv{height:150px}
   #hint{display:none}
 }
+
+.note a{color:var(--acc)}
