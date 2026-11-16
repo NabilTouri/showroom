@@ -104,6 +104,7 @@ export class Viewer {
   private paintFade = { from: '', to: '', k: 1 };
   private viewOffset = { x: 0, y: 0 };
   private pointerDown: { x: number; y: number } | null = null;
+  private disposed = false;
 
   constructor(
     readonly canvas: HTMLCanvasElement,
@@ -154,6 +155,7 @@ export class Viewer {
     this.root.position.x = -vehicle.length / 2;
     this.scene.add(this.root);
     const build = await vehicle.build({ root: this.root });
+    if (this.disposed) return; // disposed while loading
     this.root.traverse((o) => {
       if (o instanceof THREE.Mesh)
         o.receiveShadow = Array.isArray(o.material) || !o.material.transparent;
@@ -214,6 +216,7 @@ export class Viewer {
 
   /** Stops rendering and releases every GPU resource and listener. */
   dispose() {
+    this.disposed = true;
     this.renderer.setAnimationLoop(null);
     this.cleanup.forEach((off) => off());
     this.controls.dispose();

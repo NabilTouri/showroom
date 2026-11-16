@@ -101,7 +101,6 @@ function normalise(d: SceneDump, translate: boolean): SceneDump {
   return { parts, openables: rename(d.openables), unassigned: d.unassigned };
 }
 
-test.describe.configure({ mode: 'serial' });
 test.beforeAll(() => fs.mkdirSync(OUT, { recursive: true }));
 
 test('scene structure matches the original app', async ({ browser }) => {
