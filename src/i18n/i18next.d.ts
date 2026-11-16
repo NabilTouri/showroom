@@ -1,10 +1,10 @@
 import 'i18next';
 import type { VehicleLocale } from '../vehicles/types';
-import type it from './locales/it.json';
+import type en from './locales/en.json';
 
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'ui';
-    resources: { ui: typeof it; vehicle: VehicleLocale };
+    resources: { ui: typeof en; vehicle: VehicleLocale };
   }
 }

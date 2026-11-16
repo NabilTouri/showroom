@@ -1,12 +1,13 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LANGUAGES } from '../i18n';
 import { useVehicleLocale } from './usePartCard';
 import { useViewer, useViewerState } from './ViewerContext';
 
 type MenuId = 'openables' | 'lights' | 'colors';
 
 export function TopBar({ onToggleList }: { onToggleList: () => void }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { viewer, vehicle } = useViewer();
   const state = useViewerState(viewer);
   const locale = useVehicleLocale(vehicle);
@@ -126,6 +127,19 @@ export function TopBar({ onToggleList }: { onToggleList: () => void }) {
               </button>
             ))}
           </Menu>
+        </div>
+        <div className="group" id="language" role="group" aria-label={t('language')}>
+          {LANGUAGES.map((lng) => (
+            <button
+              key={lng}
+              lang={lng}
+              className={i18n.resolvedLanguage === lng ? 'on' : undefined}
+              aria-pressed={i18n.resolvedLanguage === lng}
+              onClick={() => void i18n.changeLanguage(lng)}
+            >
+              {lng.toUpperCase()}
+            </button>
+          ))}
         </div>
       </div>
       <button

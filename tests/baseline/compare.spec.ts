@@ -70,6 +70,8 @@ async function capture(browser: Browser, which: Which, state: State) {
     quality: quality(which, state.quality ?? 'low'),
     language: 'it',
   });
+  // the language switch is the one addition to the original interface
+  if (which === 'new') await page.addStyleTag({ content: '#language { display: none }' });
   await state.run?.(page, which);
   await waitForSettled(page);
   // Chromium can keep the top bar's text rasterised at the sub-pixel offset it had while the bar

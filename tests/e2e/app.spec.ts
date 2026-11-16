@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { collectErrors, openApp, press, waitForSettled } from '../support/app';
 
 test.describe('desktop', () => {
@@ -85,5 +85,42 @@ test.describe('mobile', () => {
     const panel = await page.locator('#panel').boundingBox();
     expect(panel!.x).toBe(0);
     expect(panel!.y + panel!.height).toBeCloseTo(780, 0);
+  });
+});
+
+test.describe('languages', () => {
+  const names = (page: Page) =>
+    page.evaluate(() =>
+      Object.keys(window.__driver.model().parts).map((id) => window.__driver.partName(id)),
+    );
+
+  test('English by default; Italian chosen from the switch is remembered', async ({ page }) => {
+    await openApp(page, '/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.locator('#language button.on')).toHaveText('EN');
+    await expect(page.locator('#btn-xray')).toHaveText('X-ray');
+    const english = await names(page);
+
+    await press(page.locator('#language button', { hasText: 'IT' }));
+    await expect(page.locator('html')).toHaveAttribute('lang', 'it');
+    await expect(page.locator('#btn-xray')).toHaveText('Raggi X');
+    const italian = await names(page);
+
+    // every scene part has a card in both languages, and the texts are translated
+    expect(english.filter((n) => !n)).toEqual([]);
+    expect(italian.filter((n) => !n)).toEqual([]);
+    expect(english.filter((n, i) => n !== italian[i]).length).toBeGreaterThan(english.length / 2);
+
+    await page.reload();
+    await page.waitForFunction(() => window.__driver?.ready());
+    await expect(page.locator('#language button.on')).toHaveText('IT');
+  });
+
+  test('part panel follows the language', async ({ page }) => {
+    await openApp(page, '/', { language: 'en' });
+    await page.evaluate(() => window.__driver.select('wheel.front.left'));
+    await expect(page.locator('#panel h2')).toHaveText('Wheel and tire (front left)');
+    await press(page.locator('#language button', { hasText: 'IT' }));
+    await expect(page.locator('#panel h2')).toHaveText('Ruota e pneumatico anteriore sinistra');
   });
 });
