@@ -1,6 +1,6 @@
 :root{--bg:#101216;--pane:rgba(22,25,31,.86);--line:rgba(255,255,255,.09);--tx:#e9edf2;--mut:#9aa4b2;--acc:#ffcf33;--acc2:#3d8bff;--warn:#ffb020;--r:12px}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(120% 90% at 50% 35%,#2b313b 0%,#171a20 55%,#0c0d10 100%);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#08090b;color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
 #view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
 button{font:inherit;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:9px;padding:7px 11px;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s}
 button:hover{background:rgba(255,255,255,.12)}
@@ -22,7 +22,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--acc2);outline-o
 .pop label{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:7px 9px;border-radius:8px;cursor:pointer}
 .pop label:hover{background:rgba(255,255,255,.07)}
 .pop input{accent-color:var(--acc);width:17px;height:17px}
-.sw{width:22px;height:22px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,.25)!important}
+.sw{width:20px;height:20px;flex:none;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,.25)!important}
 .sw.on{border-color:#fff!important;box-shadow:0 0 0 2px var(--acc)}
 #list{position:fixed;left:12px;top:64px;bottom:44px;width:258px;z-index:4;display:flex;flex-direction:column;background:var(--pane);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(10px);overflow:hidden}
 .list-head{padding:9px;display:flex;gap:6px;border-bottom:1px solid var(--line)}

@@ -1,61 +1,42 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { createStudio, makeEnvironment } from './scene/studio.js';
+import { createPost } from './scene/post.js';
+import { createQuality } from './scene/quality.js';
 import { buildBody } from './car/body.js';
 import { buildWheels } from './car/wheels.js';
 import { buildMechanics } from './car/engine.js';
 import { buildInterior } from './car/interior.js';
 import { L } from './car/surface.js';
-import { M, COLORS } from './car/materials.js';
+import { M, COLORS, applyPaint } from './car/materials.js';
 import { CATEGORIES, VEHICLE, getPart } from './data/parts.js';
 
 const $ = (s) => document.querySelector(s);
 const canvas = $('#view');
 
 // ---------- Renderer / scena ----------
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.0;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-const envTex = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.03).texture;
-scene.environment = envTex;
 const camera = new THREE.PerspectiveCamera(24, 1, 0.05, 80);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true; controls.dampingFactor = 0.08;
-controls.minDistance = 0.5; controls.maxDistance = 22; controls.maxPolarAngle = Math.PI * 0.53;
+controls.minDistance = 0.5; controls.maxDistance = 16; controls.maxPolarAngle = Math.PI * 0.495;
 controls.target.set(0, 0.6, 0);
-
-const sun = new THREE.DirectionalLight(0xffffff, 1.6);
-sun.position.set(-3.5, 7, 4.5); sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
-Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 1, far: 20 });
-sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02; sun.shadow.radius = 6;
-scene.add(sun);
-scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x30343a, 0.35));
-
-// pavimento: alone radiale + ombra
-{
-  const c = document.createElement('canvas'); c.width = c.height = 512;
-  const g = c.getContext('2d'), gr = g.createRadialGradient(256, 256, 30, 256, 256, 256);
-  gr.addColorStop(0, 'rgba(120,130,145,0.55)'); gr.addColorStop(0.55, 'rgba(70,78,90,0.25)'); gr.addColorStop(1, 'rgba(40,44,52,0)');
-  g.fillStyle = gr; g.fillRect(0, 0, 512, 512);
-  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-  const fl = new THREE.Mesh(new THREE.CircleGeometry(9, 64), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
-  fl.rotation.x = -Math.PI / 2; fl.position.y = -0.002; scene.add(fl);
-  const sh = new THREE.Mesh(new THREE.CircleGeometry(9, 48), new THREE.ShadowMaterial({ opacity: 0.5 }));
-  sh.rotation.x = -Math.PI / 2; sh.receiveShadow = true; scene.add(sh);
-}
+const studio = createStudio(renderer, scene);
+let post = null;
+let shadowDirty = true;
 
 // ---------- Auto ----------
 const car = { root: new THREE.Group(), parts: {}, openables: {} };
 car.root.position.x = -L / 2;
 scene.add(car.root);
 await buildBody(car); buildWheels(car); buildInterior(car); buildMechanics(car);
-car.root.traverse((o) => { if (o.isMesh) { o.receiveShadow = false; } });
+car.root.traverse((o) => { if (o.isMesh) o.receiveShadow = !o.material.transparent; });
 car.root.updateMatrixWorld(true);
 
 const info = {};           // id scena -> scheda
@@ -227,7 +208,7 @@ function ensurePreview(cv) {
   if (pv) { pv.host = cv.parentElement; pv.host.prepend(pv.renderer.domElement); cv.remove(); return; }
   const r = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
   r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.toneMapping = THREE.ACESFilmicToneMapping;
-  const s = new THREE.Scene(); s.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), 0.03).texture;
+  const s = new THREE.Scene(); s.environment = makeEnvironment(r);
   const l = new THREE.DirectionalLight(0xffffff, 1.4); l.position.set(2, 4, 3); s.add(l);
   const c = new THREE.PerspectiveCamera(28, 1, 0.01, 50);
   const ct = new OrbitControls(c, cv); ct.enablePan = false; ct.autoRotate = true; ct.autoRotateSpeed = 2.2; ct.enableDamping = true;
@@ -300,7 +281,7 @@ $('#btn-vehicle').onclick = () => { renderVehicle(); $('#list').classList.remove
 function setHidden(id, hide) {
   car.parts[id].visible = !hide; hide ? state.hidden.add(id) : state.hidden.delete(id);
   const it = document.querySelector(`.item[data-id="${id}"]`); if (it) it.classList.toggle('hid', hide);
-  $('#btn-showall').hidden = state.hidden.size === 0; invalidate();
+  $('#btn-showall').hidden = state.hidden.size === 0; shadowDirty = true; invalidate();
 }
 $('#btn-showall').onclick = () => { [...state.hidden].forEach((id) => setHidden(id, false)); if (state.selected) renderPanel(state.selected); };
 
@@ -323,9 +304,14 @@ $('#btn-explode').onclick = () => {
   state.explodeTarget = state.explodeTarget ? 0 : 1; $('#btn-explode').classList.toggle('on', !!state.explodeTarget);
   if (state.explodeTarget) { setOpen('cofano', true); const k = Math.max(1, 1.1 / camera.aspect), T = new THREE.Vector3(...EXPLODE_VIEW[1]); flyTo(T.clone().add(new THREE.Vector3(...EXPLODE_VIEW[0]).sub(T).multiplyScalar(k)), T); } invalidate();
 };
-Object.entries(COLORS).forEach(([name, hex], i) => {
-  const b = document.createElement('button'); b.className = 'sw' + (i === 0 ? ' on' : ''); b.title = name; b.setAttribute('aria-label', name); b.style.background = '#' + hex.toString(16).padStart(6, '0');
-  b.onclick = () => { M.paint.color.setHex(hex); document.querySelectorAll('.sw').forEach((s) => s.classList.toggle('on', s === b)); refreshHighlights(); if (state.selected) showPreview(state.selected); invalidate(); };
+const paintState = { from: 'Rosso Flamme', to: 'Rosso Flamme', k: 1 };
+applyPaint(paintState.from, paintState.to, 1);
+Object.entries(COLORS).forEach(([name, c], i) => {
+  const b = document.createElement('button'); b.className = 'sw' + (i === 0 ? ' on' : ''); b.title = `${name} (${c.tipo})`; b.setAttribute('aria-label', name); b.style.background = '#' + c.hex.toString(16).padStart(6, '0');
+  b.onclick = () => {
+    paintState.from = paintState.to; paintState.to = name; paintState.k = 0;
+    document.querySelectorAll('.sw').forEach((s) => s.classList.toggle('on', s === b)); invalidate();
+  };
   $('#colors').append(b);
 });
 $('#btn-list').onclick = () => $('#list').classList.toggle('open');
@@ -355,7 +341,7 @@ $('#btn-list').onclick = () => $('#list').classList.toggle('open');
 
 // ---------- Ciclo ----------
 function resize() {
-  const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; viewOffset();
+  const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); if (post) post.setSize(w, h, renderer.getPixelRatio()); camera.aspect = w / h; viewOffset();
 }
 // sposta il centro della vista nell'area libera dai pannelli
 function viewOffset() {
@@ -365,7 +351,18 @@ function viewOffset() {
   camera.setViewOffset(w, h, ox, oy, w, h); camera.updateProjectionMatrix(); invalidate();
 }
 new MutationObserver(viewOffset).observe($('#panel'), { attributes: true, attributeFilter: ['hidden'] });
-addEventListener('resize', resize); resize();
+// ---------- Qualita' ----------
+const quality = createQuality(renderer, (cfg, name) => {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, cfg.pixelRatio));
+  if (cfg.post && !post) post = createPost(renderer, scene, camera);
+  if (post) post.ao.enabled = cfg.ao;
+  studio.setMirror(cfg.mirror);
+  if (studio.key.shadow.mapSize.x !== cfg.shadow) { studio.key.shadow.mapSize.set(cfg.shadow, cfg.shadow); if (studio.key.shadow.map) { studio.key.shadow.map.dispose(); studio.key.shadow.map = null; } }
+  $('#btn-quality').textContent = 'Qualità: ' + cfg.label; $('#btn-quality').dataset.level = name;
+  resize();
+});
+$('#btn-quality').onclick = () => quality.next();
+addEventListener('resize', resize); quality.set(quality.level, false);
 { const [p, t] = VIEWS['3/4']; const T = new THREE.Vector3(...t); camera.position.copy(T).add(new THREE.Vector3(...p).sub(T).multiplyScalar(fit())); controls.target.copy(T); controls.update(); }
 syncOpenUI();
 
@@ -378,13 +375,19 @@ renderer.setAnimationLoop(() => {
     const o = car.openables[id], s = o.userData.open;
     if (Math.abs(s.cur - s.target) > 1e-4) {
       s.cur += Math.sign(s.target - s.cur) * Math.min(Math.abs(s.target - s.cur), dt / 0.9);
-      o.rotation[s.axis] = s.angle * ease(s.cur); anim = true;
+      o.rotation[s.axis] = s.angle * ease(s.cur); anim = true; shadowDirty = true;
     }
   }
   if (Math.abs(state.explode - state.explodeTarget) > 1e-4) {
     state.explode += Math.sign(state.explodeTarget - state.explode) * Math.min(Math.abs(state.explodeTarget - state.explode), dt / 1.1);
     const f = ease(state.explode);
     for (const id in car.parts) { const p = car.parts[id]; if (p.userData.explodeVec) p.position.copy(p.userData.explodeVec).multiplyScalar(f); }
+    anim = true; shadowDirty = true;
+  }
+  if (paintState.k < 1) {
+    paintState.k = Math.min(1, paintState.k + dt / 0.5); applyPaint(paintState.from, paintState.to, ease(paintState.k));
+    hlCache.forEach((m, key) => { if (key.startsWith(M.paint.uuid)) { m.color.copy(M.paint.color); m.metalness = M.paint.metalness; m.roughness = M.paint.roughness; } });
+    if (paintState.k >= 1 && state.selected) showPreview(state.selected);
     anim = true;
   }
   if (fly) {
@@ -393,10 +396,15 @@ renderer.setAnimationLoop(() => {
     if (fly.t >= 1) fly = null; anim = true;
   }
   controls.update();
-  if (dirty || anim) { renderer.render(scene, camera); dirty = false; }
+  if (dirty || anim) {
+    if (shadowDirty) { studio.updateContactShadow(); shadowDirty = false; }
+    studio.bay.intensity = 9 * ease(car.openables.cofano.userData.open.cur);
+    if (quality.cfg.post && post) post.render(); else renderer.render(scene, camera);
+    dirty = false; if (anim) quality.tick(dt);
+  }
   if (pv && pv.obj && !$('#panel').hidden) { sizePreview(); pv.controls.update(); pv.renderer.render(pv.scene, pv.camera); }
 });
 canvas.addEventListener('pointerdown', () => { fly = null; });
 
 $('#loading').classList.add('done');
-window.__app = { camera, controls, car, THREE, select, setOpen, setXray, goView, state, invalidate, info };
+window.__app = { camera, controls, car, THREE, select, setOpen, setXray, goView, state, invalidate, info, quality, studio, scene, renderer };

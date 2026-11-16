@@ -32,6 +32,50 @@ const OPEN = {                                        // asse e angolo di apertu
   porta_ant_sx: ['y', -1.1], porta_post_sx: ['y', -1.1], porta_ant_dx: ['y', 1.1], porta_post_dx: ['y', 1.1],
 };
 
+// Dettagli che nel modello condividono il materiale «finiture»: riconosciuti come isole di triangoli
+// dal loro ingombro (coordinate auto, metri) e rivestiti con il materiale giusto.
+const box = (b, x0, x1, y0, y1, zmax) => b.min.x >= x0 && b.max.x <= x1 && b.min.y >= y0 && b.max.y <= y1 && Math.max(Math.abs(b.min.z), Math.abs(b.max.z)) <= zmax;
+const DETAIL = {
+  ClioIV_grille_F: (b) => (box(b, 0, 0.12, 0.56, 0.77, 0.09) || (box(b, 0.03, 0.13, 0.63, 0.69, 0.32) && b.max.z - b.min.z > 0.2) ? M.chrome : null),   // losanga e baffi cromati
+  ClioIV_tailgate: (b) => (box(b, 3.9, 4.05, 0.69, 0.97, 0.6) && b.max.y - b.min.y < 0.13 && b.max.z - b.min.z < 0.5 ? M.chrome : null),             // losanga, scritta CLIO, targhette
+  ClioIV_door_F: (b) => (b.min.y > 0.75 && b.max.y < 0.83 ? M.paint : (b.max.y < 0.4 && b.max.y - b.min.y < 0.045 ? M.chrome : null)),                // maniglia in tinta, profilo cromato
+  ClioIV_door_R: (b) => (b.max.y < 0.4 && b.max.y - b.min.y < 0.06 && b.max.z - b.min.z < 0.03 ? M.chrome : null),
+  ClioIV_body: (b) => (b.max.y < 0.28 && b.min.x > 3.75 && b.max.x - b.min.x < 0.12 ? M.chrome : null),                                               // terminale di scarico
+};
+function splitIslands(mesh, rule) {
+  const g = mesh.geometry, pos = g.attributes.position, idx = g.index.array, nv = pos.count;
+  const root = new Int32Array(nv), key = new Map();
+  const find = (a) => { while (root[a] !== a) a = root[a] = root[root[a]]; return a; };
+  for (let i = 0; i < nv; i++) { const k = `${pos.getX(i).toFixed(4)},${pos.getY(i).toFixed(4)},${pos.getZ(i).toFixed(4)}`; if (key.has(k)) root[i] = key.get(k); else { key.set(k, i); root[i] = i; } }
+  for (let t = 0; t < idx.length; t += 3) { const a = find(idx[t]); root[find(idx[t + 1])] = a; root[find(idx[t + 2])] = a; }
+  const isl = new Map(), v = new THREE.Vector3();
+  for (let t = 0; t < idx.length; t += 3) {
+    const r = find(idx[t]); let o = isl.get(r); if (!o) isl.set(r, o = { tris: [], box: new THREE.Box3() });
+    o.tris.push(t); for (let k = 0; k < 3; k++) o.box.expandByPoint(v.fromBufferAttribute(pos, idx[t + k]).applyMatrix4(mesh.matrixWorld));
+  }
+  const mats = [mesh.material], lists = [[]];
+  for (const o of isl.values()) {
+    const m = rule(o.box) || mesh.material; let i = mats.indexOf(m); if (i < 0) { i = mats.length; mats.push(m); lists.push([]); }
+    lists[i].push(...o.tris);
+  }
+  if (mats.length === 1) return;
+  const out = new idx.constructor(idx.length); let n = 0; g.clearGroups();
+  lists.forEach((l, i) => { g.addGroup(n, l.length * 3, i); for (const t of l) { out[n++] = idx[t]; out[n++] = idx[t + 1]; out[n++] = idx[t + 2]; } });
+  g.setIndex(new THREE.BufferAttribute(out, 1)); mesh.material = mats;
+}
+
+function plateTexture(text) {
+  const c = document.createElement('canvas'); c.width = 1040; c.height = 220;
+  const g = c.getContext('2d');
+  g.fillStyle = '#f3f3ee'; g.fillRect(0, 0, 1040, 220);
+  g.strokeStyle = '#1a1a1a'; g.lineWidth = 6; g.strokeRect(6, 6, 1028, 208);
+  g.fillStyle = '#17409a'; g.fillRect(9, 9, 84, 202); g.fillRect(947, 9, 84, 202);
+  g.fillStyle = '#f4c800'; for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; g.beginPath(); g.arc(51 + Math.cos(a) * 24, 62 + Math.sin(a) * 24, 4, 0, 7); g.fill(); }
+  g.fillStyle = '#fff'; g.font = 'bold 54px Arial'; g.textAlign = 'center'; g.fillText('I', 51, 178);
+  g.fillStyle = '#111'; g.font = 'bold 150px "Arial Narrow", Arial'; g.textBaseline = 'middle'; g.fillText(text, 520, 116);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+
 function materialFor(name, node) {
   const tail = /taillight|tailgate/.test(node), head = /headlight/.test(node);
   switch (name) {
@@ -40,10 +84,15 @@ function materialFor(name, node) {
     case 'ClioIV_glass': return head ? M.lens : M.glass;
     case 'ClioIV_lights_glass': return M.redLens;
     case 'ClioIV_lights_misc': return tail ? M.redIn : M.lampIn;
-    case 'ClioIV_taillight': case 'ClioIV_chmsl': return M.red;
+    case 'ClioIV_taillight': return M.red;
+    case 'ClioIV_chmsl': return M.chmsl;
     case 'ClioIV_signal_L': case 'ClioIV_signal_R': return M.amber;
-    case 'ClioIV_headlight': case 'ClioIV_highbeam': case 'ClioIV_foglight': return M.bulb;
-    case 'ClioIV_runninglight': case 'ClioIV_reverselight': case 'ClioIV_rooflight': return M.led;
+    case 'ClioIV_headlight': return M.lowBeam;
+    case 'ClioIV_highbeam': return M.highBeam;
+    case 'ClioIV_foglight': return M.fog;
+    case 'ClioIV_runninglight': return M.drl;
+    case 'ClioIV_reverselight': return M.reverse;
+    case 'ClioIV_rooflight': return M.roofl;
     case 'ClioIV_silver': return M.chrome;
     case 'ClioIV_dashboard': return M.plasticG;
     case 'ClioIV_doorpanel': case 'ClioIV_cabin': case 'ClioIV_interior': return M.cabin;
@@ -80,6 +129,8 @@ export async function buildBody(car) {
       if (!o.isMesh) return;
       o.material = materialFor(o.material.name, node.name); o.castShadow = o.material !== M.glass && o.material !== M.lens;
     });
+    const rule = Object.keys(DETAIL).find((k) => node.name.startsWith(k));
+    if (rule) { w.updateMatrixWorld(true); w.traverse((o) => { if (o.isMesh && o.material === M.trim) splitIslands(o, DETAIL[rule]); }); }
     return w;
   };
 
@@ -118,9 +169,20 @@ export async function buildBody(car) {
   for (const id of ['paraurti_ant', 'calandra', 'portellone']) {
     const g = id === 'portellone' ? inner.portellone : groups[id]; if (!g) continue;
     const pick = [];
-    g.traverse((o) => { if (o.isMesh && (o.material === M.bulb || o.material === M.led || (id === 'portellone' && (o.material === M.redLens || o.material === M.redIn || o.material === M.red)))) pick.push(o); });
+    g.traverse((o) => { if (o.isMesh && (o.material === M.fog || o.material === M.drl || (id === 'portellone' && (o.material === M.redLens || o.material === M.redIn || o.material === M.red || o.material === M.reverse)))) pick.push(o); });
     if (!pick.length) continue;
     const tid = id === 'portellone' ? 'fanale_int' : 'drl';
     for (const o of pick) { const holder = new THREE.Group(); o.parent.updateWorldMatrix(true, false); const p = part(tid, id === 'portellone' ? inner.portellone : null); o.updateWorldMatrix(true, false); const mw = o.matrixWorld.clone(); p.updateWorldMatrix(true, false); holder.applyMatrix4(new THREE.Matrix4().copy(p.matrixWorld).invert().multiply(mw)); o.removeFromParent(); o.position.set(0, 0, 0); o.quaternion.identity(); o.scale.set(1, 1, 1); holder.add(o); p.add(holder); }
   }
+
+  // targhe
+  const plateMat = new THREE.MeshStandardMaterial({ map: plateTexture('FB 416 KD'), roughness: 0.35, metalness: 0.1 });
+  const plate = (parent, x, y, dir, bend) => {
+    const g = new THREE.PlaneGeometry(0.52, 0.11, 10, 1), p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) { const z = p.getX(i); p.setXYZ(i, bend * z * z * dir, p.getY(i), -z * dir); }
+    g.computeVertexNormals();
+    const m = new THREE.Mesh(g, plateMat); m.position.set(x, y, 0); parent.add(m);
+  };
+  plate(groups.paraurti_ant, -0.004, 0.32, -1, -0.43);
+  plate(groups.paraurti_post, 4.036, 0.462, 1, -0.2);
 }
