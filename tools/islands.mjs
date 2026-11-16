@@ -18,6 +18,7 @@ const acc = (i) => {
     ),
   );
 };
+// scale and vertical offset that take the Clio model to car coordinates (see gltf-assembly.ts)
 const S = 0.9626;
 const node = json.nodes.find((n) => n.name === nodeName);
 for (const ci of node.children) {

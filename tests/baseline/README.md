@@ -20,5 +20,8 @@ npx playwright test -c tests/baseline/playwright.config.ts
 `prepare.sh` patches the baseline's grain textures to use the same seeded generator as the current
 app (the original used `Math.random()`), so both apps produce identical textures.
 
-The original app has no i18n: the current app is opened in Italian (`showroom.language`).
+The original app has no i18n: the current app is opened in Italian (`showroom.language`) and its
+language switch, the only addition to the interface, is hidden for the screenshots. A forced
+re-layout of the top bar before each screenshot avoids a Chromium raster artefact (text kept at the
+sub-pixel offset it had while the bar reflowed during loading).
 Set `PW_CHROMIUM_PATH` to use a pre-installed Chromium.
