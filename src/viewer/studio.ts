@@ -1,12 +1,13 @@
-// Showroom scuro: ambiente di riflessione su misura, pavimento lucido con riflesso, ombra di contatto, luci.
+// Dark showroom: custom reflection environment, glossy reflective floor, contact shadow, lights.
 import * as THREE from 'three';
+import type { Spotlight } from '../vehicles/types';
 import { Reflector } from 'three/addons/objects/Reflector.js';
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js';
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js';
 
 export const BG = 0x08090b;
 
-// Studio fotografico: pannelli luminosi che disegnano i riflessi sulla carrozzeria
+// Photo studio: light panels that draw the reflections on the bodywork
 export function makeEnvironment(renderer: THREE.WebGLRenderer) {
   const s = new THREE.Scene();
   const room = new THREE.Mesh(
@@ -30,14 +31,14 @@ export function makeEnvironment(renderer: THREE.WebGLRenderer) {
     s.add(m);
   };
   const H = Math.PI / 2;
-  panel(8.5, 3.4, [0, 5.6, 0], [H, 0, 0], 3.4); // softbox a soffitto
-  panel(11, 0.55, [0, 2.6, 7], [0, 0, 0], 16); // strisce laterali
+  panel(8.5, 3.4, [0, 5.6, 0], [H, 0, 0], 3.4); // ceiling softbox
+  panel(11, 0.55, [0, 2.6, 7], [0, 0, 0], 16); // side strips
   panel(11, 0.55, [0, 2.6, -7], [0, 0, 0], 16);
-  panel(11, 0.25, [0, 0.9, 7.2], [0, 0, 0], 6, 0xbfd4ff); // lama bassa fredda
+  panel(11, 0.25, [0, 0.9, 7.2], [0, 0, 0], 6, 0xbfd4ff); // low cool blade
   panel(11, 0.25, [0, 0.9, -7.2], [0, 0, 0], 6, 0xbfd4ff);
-  panel(4.5, 2.4, [-10, 3.0, 0], [0, H, 0], 5, 0xfff1dc); // riempimento frontale caldo
-  panel(4.5, 2.4, [10, 3.0, 0], [0, H, 0], 4, 0xdce8ff); // riempimento posteriore freddo
-  panel(2.2, 2.2, [-6.5, 4.6, 5.5], [H * 0.6, 0.6, 0], 9); // accenti a 3/4
+  panel(4.5, 2.4, [-10, 3.0, 0], [0, H, 0], 5, 0xfff1dc); // warm front fill
+  panel(4.5, 2.4, [10, 3.0, 0], [0, H, 0], 4, 0xdce8ff); // cool rear fill
+  panel(2.2, 2.2, [-6.5, 4.6, 5.5], [H * 0.6, 0.6, 0], 9); // 3/4 accents
   panel(2.2, 2.2, [6.5, 4.6, -5.5], [H * 0.6, 0.6, 0], 7);
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(30, 30),
@@ -108,12 +109,16 @@ function glowTexture() {
 
 export type Studio = ReturnType<typeof createStudio>;
 
-export function createStudio(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
+export function createStudio(
+  renderer: THREE.WebGLRenderer,
+  scene: THREE.Scene,
+  spotlights: readonly Spotlight[],
+) {
   scene.background = new THREE.Color(BG);
   scene.environment = makeEnvironment(renderer);
   scene.environmentIntensity = 1.0;
 
-  // ----- luci -----
+  // ----- lights -----
   const key = new THREE.DirectionalLight(0xffffff, 0.55);
   key.position.set(-2.5, 7.5, 3.5);
   key.castShadow = true;
@@ -136,12 +141,16 @@ export function createStudio(renderer: THREE.WebGLRenderer, scene: THREE.Scene) 
   rimB.position.set(-6, 2.5, -5);
   scene.add(rimB);
   scene.add(new THREE.HemisphereLight(0xcfd8e6, 0x101114, 0.18));
-  const bay = new THREE.SpotLight(0xfff3e0, 0, 4, 0.75, 0.6, 1.2); // luce sul vano motore, accesa a cofano aperto
-  bay.position.set(-2.9, 2.3, 0.4);
-  bay.target.position.set(-1.35, 0.6, 0);
-  scene.add(bay, bay.target);
+  // vehicle spotlights start off: the viewer fades them in with their openable
+  const spots = spotlights.map((s) => {
+    const spot = new THREE.SpotLight(s.color, 0, s.distance, s.angle, s.penumbra, s.decay);
+    spot.position.set(...s.position);
+    spot.target.position.set(...s.target);
+    scene.add(spot, spot.target);
+    return spot;
+  });
 
-  // ----- pavimento -----
+  // ----- floor -----
   const floor = new THREE.Group();
   scene.add(floor);
   const geo = new THREE.CircleGeometry(14, 72);
@@ -175,7 +184,7 @@ export function createStudio(renderer: THREE.WebGLRenderer, scene: THREE.Scene) 
     simple.visible = !res;
   };
 
-  // ----- ombra di contatto (profondita' vista da sotto, poi sfocata) -----
+  // ----- contact shadow (depth seen from below, then blurred) -----
   const W = 6.2,
     D = 3.8,
     HGT = 0.9,
@@ -258,5 +267,16 @@ export function createStudio(renderer: THREE.WebGLRenderer, scene: THREE.Scene) 
     plane.visible = true;
   }
 
-  return { key, bay, floor, setMirror, updateContactShadow };
+  // render targets and helpers; the scene's meshes are disposed with the scene
+  const dispose = () => {
+    setMirror(0);
+    rt.dispose();
+    rtBlur.dispose();
+    depthMat.dispose();
+    hB.dispose();
+    vB.dispose();
+    scene.environment?.dispose();
+  };
+
+  return { key, spots, floor, setMirror, updateContactShadow, dispose };
 }

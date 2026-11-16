@@ -29,13 +29,16 @@ declare global {
 export function installDriver() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const w = window as any;
+  // window.__showroom (current app) or window.__app (original app, see tests/baseline)
+  const handle = () => w.__showroom;
   const legacy = () => w.__app;
   const driver: TestDriver = {
-    ready: () => !!legacy(),
-    select: (id, focus = false) => legacy().select(id, { focus }),
-    partName: (id) => legacy().info[id]?.name ?? null,
-    frame: () => legacy().renderer.info.render.frame,
+    ready: () => !!(handle() || legacy()),
+    select: (id, focus = false) => (handle()?.viewer ?? legacy()).select(id, { focus }),
+    partName: (id) => (handle() ? handle().partName(id) : (legacy().info[id]?.name ?? null)),
+    frame: () => (handle()?.viewer ?? legacy()).renderer.info.render.frame,
     model: () => {
+      if (handle()) return handle().viewer.model;
       const car = legacy().car;
       const openables: ModelView['openables'] = {};
       for (const id in car.openables) {

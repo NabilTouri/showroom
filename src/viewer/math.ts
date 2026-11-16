@@ -1,0 +1,4 @@
+export type Vec3 = readonly [number, number, number];
+
+/** Cubic ease-in-out used by every animation of the viewer. */
+export const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);

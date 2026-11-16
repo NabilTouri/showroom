@@ -1,10 +1,10 @@
+// Wheels (the model's alloy rim inside a procedural tire) and brakes.
 import * as THREE from 'three';
-import { FA, RA, WHEEL_Y, TRACK } from './surface.js';
-import { M } from './materials.js';
-import { tireBump } from './textures.js';
-import type { Car } from './car.js';
+import { tireBump } from '../../viewer/textures';
+import type { ClioDimensions } from './dimensions';
+import type { ClioMaterials } from './materials';
 
-const RIM_R = 0.218; // raggio del cerchio del modello (17")
+const RIM_R = 0.218; // radius of the model's 17" rim
 
 function tireGeo() {
   const w = 0.1,
@@ -27,13 +27,20 @@ function tireGeo() {
   return new THREE.LatheGeometry(spline, 72).rotateX(Math.PI / 2);
 }
 
-export function buildWheels(car: Car) {
+/** Adds the four wheels and brakes to `root`; `rim` is the rim template from the model. */
+export function buildWheels(
+  root: THREE.Group,
+  mat: ClioMaterials,
+  dims: ClioDimensions,
+  rim: THREE.Object3D | undefined,
+) {
+  const parts: Record<string, THREE.Group> = {};
   const tire = tireGeo();
-  const bump = tireBump();
-  M.tire.bumpMap = bump;
-  M.tire.bumpScale = 1.6;
-  M.tire.roughness = 0.88;
-  M.tire.needsUpdate = true;
+  const bump = tireBump(['ENERGY SAVER', '195/55 R16 87H']);
+  mat.tire.bumpMap = bump;
+  mat.tire.bumpScale = 1.6;
+  mat.tire.roughness = 0.88;
+  mat.tire.needsUpdate = true;
   const barrel = new THREE.CylinderGeometry(
     RIM_R - 0.004,
     RIM_R - 0.004,
@@ -43,18 +50,17 @@ export function buildWheels(car: Car) {
     true,
   ).rotateX(Math.PI / 2);
   for (const [pos, ax] of [
-    ['ant', FA],
-    ['post', RA],
+    ['front', dims.frontAxle],
+    ['rear', dims.rearAxle],
   ] as const)
     for (const s of [1, -1]) {
-      const sx = s > 0 ? 'sx' : 'dx';
+      const side = s > 0 ? 'left' : 'right';
       const hub = new THREE.Group();
-      hub.position.set(ax, WHEEL_Y, TRACK * s);
+      hub.position.set(ax, dims.wheelCenterY, dims.halfTrack * s);
       hub.scale.z = s;
-      car.root.add(hub);
+      root.add(hub);
       const w = new THREE.Group();
-      w.userData.partId = `ruota_${pos}_${sx}`;
-      car.parts[w.userData.partId] = w;
+      parts[`wheel.${pos}.${side}`] = w;
       hub.add(w);
       const add = (g: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material) => {
         const m = new THREE.Mesh(geo, mat);
@@ -62,53 +68,53 @@ export function buildWheels(car: Car) {
         g.add(m);
         return m;
       };
-      add(w, tire, M.tire);
-      const inner = add(w, barrel, M.rimDark);
-      inner.material = M.rimDark;
-      if (car.rim) {
-        const r = car.rim.clone(true);
+      add(w, tire, mat.tire);
+      const inner = add(w, barrel, mat.rimDark);
+      inner.material = mat.rimDark;
+      if (rim) {
+        const r = rim.clone(true);
         r.position.set(0, 0, 0.012);
         w.add(r);
       }
       const cap = add(
         w,
         new THREE.CylinderGeometry(0.027, 0.027, 0.004, 24).rotateX(Math.PI / 2),
-        M.plastic,
+        mat.plastic,
       );
       cap.position.z = 0.062;
-      // freni
+      // brakes
       const f = new THREE.Group();
-      f.userData.partId = `freno_${pos}_${sx}`;
-      car.parts[f.userData.partId] = f;
+      parts[`brake.${pos}.${side}`] = f;
       hub.add(f);
-      if (pos === 'ant') {
+      if (pos === 'front') {
         const d = add(
           f,
           new THREE.CylinderGeometry(0.129, 0.129, 0.022, 48).rotateX(Math.PI / 2),
-          M.disc,
+          mat.disc,
         );
         d.position.z = 0.0;
         const h = add(
           f,
           new THREE.CylinderGeometry(0.072, 0.072, 0.05, 24).rotateX(Math.PI / 2),
-          M.iron,
+          mat.iron,
         );
         h.position.z = 0.01;
-        const c = add(f, new THREE.BoxGeometry(0.07, 0.13, 0.075), M.aluDark);
+        const c = add(f, new THREE.BoxGeometry(0.07, 0.13, 0.075), mat.aluDark);
         c.position.set(-0.115, 0.02, -0.005);
       } else {
         const d = add(
           f,
           new THREE.CylinderGeometry(0.118, 0.118, 0.06, 32).rotateX(Math.PI / 2),
-          M.iron,
+          mat.iron,
         );
         d.position.z = -0.02;
         const h = add(
           f,
           new THREE.CylinderGeometry(0.06, 0.06, 0.03, 20).rotateX(Math.PI / 2),
-          M.rust,
+          mat.rust,
         );
         h.position.z = 0.02;
       }
     }
+  return parts;
 }

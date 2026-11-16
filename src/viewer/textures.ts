@@ -1,4 +1,4 @@
-// Texture procedurali (nessun file esterno): grana dei materiali, battistrada, etichette.
+// Procedural textures (no external files): material grain, tire tread, labels, plates.
 import * as THREE from 'three';
 
 function canvas(w: number, h: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
@@ -22,7 +22,7 @@ const finish = (c: HTMLCanvasElement, { repeat = [1, 1], color = false }: Finish
   return t;
 };
 
-// generatore pseudo-casuale deterministico (mulberry32): stesse texture a ogni avvio
+/** Deterministic pseudo-random generator (mulberry32): the same textures on every load. */
 export function seededRandom(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
@@ -42,7 +42,7 @@ export interface GrainOptions {
   seed?: number;
 }
 
-// grana a più ottave (per rilievo e rugosità): fine = fusione/plastica goffrata, grossa = ghisa/ruggine
+/** Multi-octave grain for bump and roughness maps: fine = cast alloy / textured plastic, coarse = cast iron / rust. */
 export function grain(
   size = 256,
   { octaves = 4, base = 128, amp = 70, blotch = 0, seed = 1 }: GrainOptions = {},
@@ -94,21 +94,24 @@ export function grain(
   return finish(c, opt);
 }
 
-// pneumatico: u = giro, v = profilo (fianco – battistrada – fianco). Chiaro = in rilievo.
-export function tireBump() {
+/**
+ * Tire bump map: u = around the tire, v = across the profile (sidewall – tread – sidewall).
+ * Light = raised. `sidewall` alternates around both sidewalls.
+ */
+export function tireBump(sidewall: readonly [string, string]) {
   const [c, g] = canvas(2048, 512);
   g.fillStyle = '#808080';
   g.fillRect(0, 0, 2048, 512);
   const t0 = 512 * 0.36,
     t1 = 512 * 0.64;
   g.fillStyle = '#b0b0b0';
-  g.fillRect(0, t0, 2048, t1 - t0); // fascia battistrada
+  g.fillRect(0, t0, 2048, t1 - t0); // tread band
   g.fillStyle = '#202020';
-  for (const f of [0.42, 0.5, 0.58]) g.fillRect(0, 512 * f - 5, 2048, 10); // scanalature longitudinali
+  for (const f of [0.42, 0.5, 0.58]) g.fillRect(0, 512 * f - 5, 2048, 10); // circumferential grooves
   g.strokeStyle = '#303030';
   g.lineWidth = 5;
   for (let x = 0; x < 2048; x += 24) {
-    // intagli obliqui
+    // oblique sipes
     g.beginPath();
     g.moveTo(x, t0);
     g.lineTo(x + 14, 512 * 0.415);
@@ -130,7 +133,7 @@ export function tireBump() {
     [0.12, 0.3],
     [0.7, 0.88],
   ]) {
-    // fianchi: cordoli e scritte
+    // sidewalls: ribs and lettering
     g.fillStyle = '#9a9a9a';
     g.fillRect(0, 512 * ya, 2048, 3);
     g.fillRect(0, 512 * yb, 2048, 3);
@@ -138,7 +141,7 @@ export function tireBump() {
     g.font = 'bold 44px Arial';
     g.textBaseline = 'middle';
     for (let i = 0; i < 4; i++) {
-      g.fillText(i % 2 ? '195/55 R16 87H' : 'ENERGY SAVER', 60 + i * 512, (512 * (ya + yb)) / 2);
+      g.fillText(sidewall[i % 2], 60 + i * 512, (512 * (ya + yb)) / 2);
     }
   }
   return finish(c);
@@ -199,5 +202,37 @@ export function beamTexture() {
   g.fillRect(0, 0, 512, 512);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+/** EU-style number plate: blue band with the country code on the left, plain band on the right. */
+export function plateTexture(text: string, country: string) {
+  const [c, g] = canvas(1040, 220);
+  g.fillStyle = '#f3f3ee';
+  g.fillRect(0, 0, 1040, 220);
+  g.strokeStyle = '#1a1a1a';
+  g.lineWidth = 6;
+  g.strokeRect(6, 6, 1028, 208);
+  g.fillStyle = '#17409a';
+  g.fillRect(9, 9, 84, 202);
+  g.fillRect(947, 9, 84, 202);
+  g.fillStyle = '#f4c800';
+  for (let i = 0; i < 12; i++) {
+    const a = (i * Math.PI) / 6;
+    g.beginPath();
+    g.arc(51 + Math.cos(a) * 24, 62 + Math.sin(a) * 24, 4, 0, 7);
+    g.fill();
+  }
+  g.fillStyle = '#fff';
+  g.font = 'bold 54px Arial';
+  g.textAlign = 'center';
+  g.fillText(country, 51, 178);
+  g.fillStyle = '#111';
+  g.font = 'bold 150px "Arial Narrow", Arial';
+  g.textBaseline = 'middle';
+  g.fillText(text, 520, 116);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
   return t;
 }

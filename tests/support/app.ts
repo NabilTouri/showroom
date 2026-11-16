@@ -3,7 +3,7 @@ import { installDriver } from './driver';
 
 export interface OpenOptions {
   /** Quality level forced through the `q` query parameter. */
-  quality?: 'alta' | 'media' | 'bassa';
+  quality?: string;
   /** UI language stored before the app starts (ignored by apps without i18n). */
   language?: 'en' | 'it';
 }
@@ -11,7 +11,7 @@ export interface OpenOptions {
 export async function openApp(
   page: Page,
   url: string,
-  { quality = 'bassa', language }: OpenOptions = {},
+  { quality = 'low', language }: OpenOptions = {},
 ) {
   await page.addInitScript(installDriver);
   if (language)

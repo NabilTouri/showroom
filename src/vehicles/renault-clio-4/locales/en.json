@@ -1,0 +1,816 @@
+{
+  "subtitle": "2016 · 1.5 dCi 75 hp · K9K",
+  "card": {
+    "intro": "Fourth-generation Clio (2012–2019), 2016 model with the 75 hp 1.5 dCi turbodiesel. Click a component on the model or in the list to see what it does, its data, maintenance and replacement parts.",
+    "specs": [
+      ["Engine", "K9K 612 (Euro 5) / K9K 628 (Euro 6) — inline 4-cylinder, 8 valves, SOHC"],
+      ["Displacement", "1461 cm³ (bore 76 × stroke 80.5 mm)"],
+      ["Power", "55 kW (75 hp) at 4000 rpm"],
+      ["Torque", "200 Nm at 1750 rpm"],
+      ["Fuel system", "Common rail, fixed-geometry turbo with intercooler"],
+      ["Transmission", "5-speed manual (JR5), front-wheel drive"],
+      ["Dimensions", "4062 × 1732 × 1448 mm, wheelbase 2589 mm"],
+      ["Curb weight", "approx. 1,070–1,150 kg"],
+      ["Fuel tank", "45 liters"],
+      ["Cargo area", "300 liters (1,146 with seats folded)"],
+      ["Performance", "approx. 168 km/h, 0–100 km/h in ~14 s"],
+      ["Combined consumption", "approx. 3.6 l/100 km (NEDC homologated)"]
+    ],
+    "note": "Approximate values: they may vary with trim level, homologation and production year.",
+    "credits": "3D body model: «Renault Clio MK4 2012-2020» by <author>Merc_TV on Sketchfab</author>, license <license>CC BY 4.0</license>. Engine bay, mechanicals and wheels are added reconstructions."
+  },
+  "partNote": "Approximate data for educational purposes for the Clio IV 1.5 dCi 75 (K9K 612/628). Intervals, quantities and part numbers change with year and version: always verify with the owner's manual or the VIN.",
+  "categories": {
+    "engine": "Engine",
+    "fuel": "Diesel fuel system",
+    "intake": "Intake and turbo",
+    "cooling": "Cooling and A/C",
+    "exhaust": "Exhaust",
+    "electrical": "Electrical system",
+    "transmission": "Drivetrain",
+    "brakes": "Brakes",
+    "suspension": "Suspension and steering",
+    "wheels": "Wheels",
+    "body": "Body",
+    "lights": "Lights and glass",
+    "interior": "Interior"
+  },
+  "views": {
+    "three-quarter": "3/4",
+    "side": "Side",
+    "front": "Front",
+    "rear": "Rear",
+    "top": "Top",
+    "engine": "Engine",
+    "interior": "Interior"
+  },
+  "openables": {
+    "hood": "Hood",
+    "door.front.left": "Front left door",
+    "door.front.right": "Front right door",
+    "door.rear.left": "Rear left door",
+    "door.rear.right": "Rear right door",
+    "tailgate": "Tailgate"
+  },
+  "lights": {
+    "drl": "Daytime running lights",
+    "low-beam": "Low beam",
+    "hazard": "Hazard lights",
+    "brake": "Brake lights",
+    "reverse": "Reverse lights"
+  },
+  "qualifiers": {
+    "left": "left",
+    "right": "right",
+    "front": "front",
+    "rear": "rear"
+  },
+  "parts": {
+    "engine": {
+      "name": "K9K 1.5 dCi engine",
+      "description": "The heart of the car: an inline 4-cylinder turbodiesel mounted transversely. From bottom to top you can see the oil pan, the cast-iron block, the aluminum cylinder head with a single camshaft (8 valves) and the valve cover. It is one of the most widespread diesels in Europe (Renault, Dacia, Nissan, Mercedes).",
+      "where": "In the center of the engine bay, offset slightly to the right; the transmission is bolted to the left side.",
+      "specs": [
+        ["Engine code", "K9K 612 / 628"],
+        ["Displacement", "1461 cm³"],
+        ["Power", "75 hp (55 kW) at 4000 rpm"],
+        ["Torque", "200 Nm at 1750 rpm"],
+        ["Compression ratio", "approx. 15.5:1"],
+        ["Firing order", "1-3-4-2"],
+        ["Oil", "5W-30 ACEA C4 (Renault RN0720 standard)"],
+        ["Oil capacity", "approx. 4.4–4.5 liters with filter"]
+      ],
+      "maintenance": [
+        "Oil and filter change: every 30,000 km or 2 years per the owner's manual; many mechanics recommend 15,000 km / 1 year to protect the bearings and turbo.",
+        "Check the oil level every 1,000–2,000 km.",
+        "Warm up the engine before driving hard, and let it idle for a few seconds before shutting it off after highway driving."
+      ],
+      "faults": [
+        "Connecting-rod bearing wear (especially with overly long oil-change intervals): metallic knocking noise.",
+        "Leaks from the valve cover or the crankshaft oil seal.",
+        "Smoke and loss of power caused by a dirty EGR valve or injectors."
+      ],
+      "oem": ["5W-30 RN0720 engine oil (e.g. Elf Solaris DPF)"]
+    },
+    "engine-cover": {
+      "name": "Engine cover",
+      "description": "Plastic cosmetic and sound-absorbing cover over the cylinder head, injectors and fuel rail. It comes off by pulling it straight up: it is held by press-fit rubber grommets. Hide it with the \"Hide\" button to see what's underneath.",
+      "where": "On top of the engine; it's the first thing you see when you open the hood.",
+      "maintenance": ["No maintenance: just check that the mounting grommets are intact."]
+    },
+    "oil-filler-cap": {
+      "name": "Oil filler cap",
+      "description": "This is where you add engine oil. A light-colored \"mayonnaise\" under the cap may be condensation (short trips) or, in serious cases, coolant in the oil.",
+      "where": "On the valve cover, right side of the engine.",
+      "specs": [
+        ["Oil", "5W-30 ACEA C4 RN0720"],
+        ["Between MIN and MAX", "approx. 1.5 liters"]
+      ],
+      "maintenance": [
+        "Top up with the engine off and the car on level ground, a little at a time, checking with the dipstick."
+      ]
+    },
+    "oil-dipstick": {
+      "name": "Oil dipstick",
+      "description": "Metal rod with a yellow handle for checking the oil level. Read the level with the engine off for at least 5–10 minutes and the car on level ground.",
+      "where": "On the front side of the engine, toward the center.",
+      "maintenance": [
+        "Pull it out, wipe it, push it fully back in and pull it out again: the level must be between the two marks."
+      ]
+    },
+    "oil-filter": {
+      "name": "Oil filter",
+      "description": "Traps impurities in the oil. On this generation of the K9K it is a paper cartridge inside a plastic housing screwed onto the front of the engine block.",
+      "where": "At the front of the block, low down; reachable from above or below.",
+      "maintenance": [
+        "Replace at every oil change together with the housing O-rings.",
+        "Housing tightening torque: approx. 25 Nm (it is printed on the cap)."
+      ],
+      "oem": ["Oil filter (cartridge)", "Older spin-on type alternative"]
+    },
+    "timing-belt": {
+      "name": "Timing belt",
+      "description": "Under this cover is the toothed belt that synchronizes the crankshaft and camshaft and also drives the high-pressure pump. If it breaks, the valves hit the pistons: very serious damage.",
+      "where": "Right side of the engine (passenger side), behind the plastic cover.",
+      "specs": [
+        ["Type", "Toothed belt with automatic tensioner"],
+        ["Timing", "Set with locking pins on the crankshaft and camshaft"]
+      ],
+      "maintenance": [
+        "Complete kit replacement (belt + tensioner): approx. 150,000 km or 6 years — verify in the specific car's owner's manual.",
+        "Replace the water pump and accessory belt at the same time."
+      ],
+      "faults": [
+        "Breakage due to missed replacement or a seized tensioner.",
+        "Whining or humming from the timing side = tensioner or water pump at end of life."
+      ],
+      "oem": ["Timing belt kit", "Timing belt kit + water pump"]
+    },
+    "water-pump": {
+      "name": "Water pump",
+      "description": "Circulates coolant between the engine and radiator. It is driven by the timing belt, which is why it is replaced together with it.",
+      "where": "On the right side of the block, behind the timing cover.",
+      "maintenance": ["Replace together with the timing belt."],
+      "faults": ["Pink/green coolant leaks on the timing side.", "Noisy bearing."],
+      "oem": ["Water pump"]
+    },
+    "accessory-belt": {
+      "name": "Accessory drive belt (poly-V)",
+      "description": "Ribbed belt driven by the crankshaft pulley that turns the alternator and A/C compressor. An automatic tensioner keeps it tight.",
+      "where": "Right end of the engine, in front of the timing cover.",
+      "maintenance": [
+        "Replace with the timing belt kit (or sooner if cracked).",
+        "Never let pieces of a broken accessory belt get into the timing drive: on the K9K this is a classic engine killer."
+      ],
+      "faults": [
+        "Squealing when cold, fraying.",
+        "Crankshaft pulley (damper) with delaminated rubber."
+      ],
+      "oem": ["Accessory belt kit with tensioner"]
+    },
+    "alternator": {
+      "name": "Alternator",
+      "description": "Converts part of the engine's power into electricity to charge the battery and power all electrical loads. On Stop&Start / Energy versions it is controlled by the ECU to recover energy when coasting.",
+      "where": "At the front of the engine, upper right.",
+      "specs": [
+        ["Charging voltage", "13.5–14.8 V"],
+        ["Output current", "approx. 110–125 A"]
+      ],
+      "faults": [
+        "Battery warning light on, lights dimming.",
+        "Noisy overrunning (freewheel) pulley."
+      ],
+      "oem": ["Alternator"]
+    },
+    "ac-compressor": {
+      "name": "A/C compressor",
+      "description": "Compresses the air-conditioning refrigerant. It is driven by the accessory belt and engages through an electromagnetic clutch.",
+      "where": "At the front of the engine, lower right, below the alternator.",
+      "specs": [
+        [
+          "Refrigerant",
+          "R134a or R1234yf depending on production date (see the label under the hood)"
+        ],
+        ["Charge", "approx. 450–500 g"]
+      ],
+      "maintenance": [
+        "Run the A/C for a few minutes even in winter to lubricate the seals.",
+        "Recharge/check every 2–3 years."
+      ],
+      "oem": ["A/C compressor"]
+    },
+    "ac-condenser": {
+      "name": "A/C condenser",
+      "description": "It's the air conditioning's \"radiator\": it cools the compressed refrigerant and turns it back into liquid. It is the first heat exchanger behind the bumper, so it is the most exposed to stones and bugs.",
+      "where": "In front of the engine radiator, right behind the grille.",
+      "faults": ["Punctures from road debris → refrigerant leak, A/C that doesn't cool."],
+      "oem": ["Condenser"]
+    },
+    "radiator": {
+      "name": "Engine radiator",
+      "description": "Aluminum heat exchanger that transfers heat from the coolant to the air. Hot coolant enters at the top and returns to the engine cooler from the bottom.",
+      "where": "Behind the grille, between the condenser and the fan.",
+      "specs": [
+        ["Coolant", "Glaceol RX Type D (premixed)"],
+        ["System capacity", "approx. 5.5–6 liters"]
+      ],
+      "maintenance": [
+        "Coolant replacement: approx. every 4–5 years (verify in the owner's manual).",
+        "Keep the fins clear of leaves and bugs."
+      ],
+      "oem": ["Radiator"]
+    },
+    "radiator-fan": {
+      "name": "Radiator cooling fan",
+      "description": "Electric fan that pulls air through the radiator and condenser when the car is stopped or moving slowly, or when the A/C is on.",
+      "where": "Behind the radiator, toward the engine.",
+      "faults": ["Burned-out motor or failed resistor: overheating in traffic."],
+      "oem": ["Cooling fan assembly"]
+    },
+    "radiator-hoses": {
+      "name": "Radiator hoses",
+      "description": "Rubber hoses connecting the engine and radiator. The upper one carries hot coolant to the radiator, the lower one returns it to the engine.",
+      "maintenance": ["Check that they aren't swollen, cracked or oily; check the clamps."]
+    },
+    "coolant-reservoir": {
+      "name": "Coolant reservoir",
+      "description": "Expansion tank of the cooling system. Check the level with the engine COLD; it must be between MIN and MAX. Never open the cap with the engine hot: the system is under pressure.",
+      "where": "At the back of the engine bay, right side, near the firewall.",
+      "specs": [
+        ["Coolant", "Glaceol RX Type D (yellow/green)"],
+        ["Cap pressure rating", "approx. 1.4 bar"]
+      ],
+      "faults": [
+        "Dropping level = a leak (water pump, radiator, hoses) to be tracked down right away."
+      ],
+      "oem": ["Glaceol RX D coolant"]
+    },
+    "thermostat": {
+      "name": "Thermostat",
+      "description": "Valve that keeps the circuit to the radiator closed until the engine reaches operating temperature (approx. 83–89 °C), then opens it.",
+      "where": "On the cylinder head, right side, inside a plastic housing.",
+      "faults": [
+        "Stuck open: engine doesn't warm up, high fuel consumption, weak cabin heat.",
+        "Leaking plastic housing."
+      ],
+      "oem": ["Thermostat with housing"]
+    },
+    "fuel-filter": {
+      "name": "Diesel fuel filter",
+      "description": "Traps dirt and water in the diesel fuel before they reach the pump and injectors, which work to tolerances of thousandths of a millimeter. It has a water-in-fuel sensor and, next to it, the manual priming bulb.",
+      "where": "In the engine bay, front right side.",
+      "maintenance": [
+        "Replacement: approx. every 60,000 km (every 2 services) or sooner with fuel of doubtful quality.",
+        "After replacement, bleed the air with the priming bulb until it becomes firm."
+      ],
+      "faults": [
+        "Clogged filter: hesitation under acceleration, hard starting.",
+        "Water-in-fuel warning light."
+      ],
+      "oem": ["Diesel fuel filter", "Alternative"]
+    },
+    "high-pressure-pump": {
+      "name": "High-pressure fuel pump",
+      "description": "Raises the diesel fuel to approx. 1600 bar and sends it to the rail. It is driven by the timing belt and lubricated by the fuel itself: that's why you must never run out of fuel or put in gasoline by mistake.",
+      "where": "Right side of the engine, high up toward the firewall.",
+      "specs": [
+        ["Maximum pressure", "approx. 1600 bar"],
+        ["Control", "ECU-controlled fuel metering valve"]
+      ],
+      "faults": [
+        "Metal shavings in the system (worn pump) → injector damage.",
+        "Faulty pressure regulator: stalling, hard starting."
+      ],
+      "oem": ["High-pressure fuel pump"]
+    },
+    "fuel-rail": {
+      "name": "Fuel rail (common rail)",
+      "description": "Steel accumulator tube that holds diesel fuel at very high pressure, ready for the 4 injectors: this is the \"common rail\". It carries a pressure sensor that the ECU reads continuously.",
+      "where": "On top of the cylinder head, rear side, under the engine cover.",
+      "faults": [
+        "Failed rail pressure sensor: engine in limp mode.",
+        "Never loosen the lines with the engine running: 1600 bar jet."
+      ],
+      "oem": ["Rail pressure sensor"]
+    },
+    "injectors": {
+      "name": "Injectors",
+      "description": "Four electronic injectors that atomize diesel fuel directly into the cylinders, with multiple injections per cycle (pilot, main, post). Each has a calibration code that must be programmed into the ECU when it is replaced.",
+      "where": "On the cylinder head, one per cylinder, under the engine cover.",
+      "specs": [
+        ["Type", "Common-rail solenoid injectors (Continental/Siemens VDO on Euro 5)"],
+        ["Coding", "Individual code to be entered with a diagnostic tool"]
+      ],
+      "faults": [
+        "Leaking copper sealing washers: black tar around the injector and a \"chuff-chuff\" sound at idle.",
+        "Rough idle, smoke, knocking."
+      ],
+      "oem": ["Injector", "Injector heat-shield washer"]
+    },
+    "glow-plugs": {
+      "name": "Glow plugs",
+      "description": "Four heating elements that warm the combustion chambers to help cold starting (the yellow \"coil\" light on the instrument cluster). They stay on for a few moments after starting to reduce smoke and noise.",
+      "where": "Screwed into the cylinder head, front side, one per cylinder.",
+      "maintenance": [
+        "Check/replace approx. every 100,000–120,000 km; remove them with the engine warm so they don't snap."
+      ],
+      "faults": ["Hard starting and white smoke when cold, check engine light."],
+      "oem": ["Glow plug"]
+    },
+    "fuel-tank": {
+      "name": "Fuel tank",
+      "description": "45-liter plastic tank under the rear seat. Inside is the fuel level float; the filler neck runs from the fuel door on the right side.",
+      "where": "Under the floor, ahead of the rear axle.",
+      "specs": [
+        ["Capacity", "45 liters"],
+        ["Fuel", "EN 590 diesel (max B7; B10 where permitted by the owner's manual)"]
+      ]
+    },
+    "fuel-flap": {
+      "name": "Fuel door",
+      "description": "Small door covering the fuel cap. It unlocks together with the central locking.",
+      "where": "Right rear side.",
+      "specs": [
+        ["Fuel", "Diesel only"],
+        ["Tank capacity", "45 liters"]
+      ]
+    },
+    "air-filter": {
+      "name": "Air filter box",
+      "description": "Holds the paper filter that cleans the air drawn in by the engine. A diesel draws in thousands of liters of air per minute: a dirty filter robs power and increases fuel consumption and smoke.",
+      "where": "Front left side of the engine bay.",
+      "maintenance": [
+        "Replacement: approx. every 30,000 km or 2 years (halve the interval in dusty areas)."
+      ],
+      "oem": ["Air filter"]
+    },
+    "maf-sensor": {
+      "name": "MAF sensor (mass air flow meter)",
+      "description": "Hot-film sensor that measures how much air enters the engine. The ECU uses this data to meter fuel and EGR.",
+      "where": "On the duct at the outlet of the air filter box.",
+      "maintenance": ["It can be cleaned with a dedicated spray; never touch the sensing element."],
+      "faults": [
+        "Sluggish engine, black smoke, high fuel consumption; often with no warning light on."
+      ],
+      "oem": ["MAF sensor"]
+    },
+    "intake-duct": {
+      "name": "Turbo intake duct",
+      "description": "Duct that carries filtered air from the filter box to the turbo compressor inlet. The engine's crankcase breather (oil vapor) also feeds into it, which is why a thin film of oil inside is normal.",
+      "faults": ["Cracks or loose clamps: unfiltered air entering the turbo."]
+    },
+    "turbocharger": {
+      "name": "Turbocharger",
+      "description": "Exhaust gases spin a turbine (hot side, rusty) connected by a shaft to a compressor (cold side, aluminum) that forces more air into the cylinders. On the 75 hp version it is fixed-geometry with a wastegate controlled by a vacuum actuator. It spins at over 200,000 rpm, lubricated by engine oil.",
+      "where": "Behind the engine, on the firewall side, attached to the exhaust manifold.",
+      "specs": [
+        ["Type", "Fixed geometry with wastegate (BorgWarner KP35)"],
+        ["Boost pressure", "approx. 1.0–1.2 bar (gauge)"]
+      ],
+      "maintenance": [
+        "Good oil changed often = a long-lasting turbo.",
+        "Don't shut the engine off immediately after hard driving."
+      ],
+      "faults": [
+        "Loud whistling, blue smoke, large amounts of oil in the hoses.",
+        "Stuck wastegate: too little or too much boost."
+      ],
+      "oem": ["Turbocharger", "BorgWarner manufacturer part number"]
+    },
+    "intercooler-hoses": {
+      "name": "Intercooler hoses",
+      "description": "Reinforced rubber hoses that carry the (hot) compressed air from the turbo to the intercooler and from there (cooled) to the intake manifold.",
+      "maintenance": ["Check the clamps and look for oil traces on the outside."],
+      "faults": [
+        "Split or disconnected hose: loud whooshing under acceleration, loss of power and black smoke."
+      ]
+    },
+    "intercooler": {
+      "name": "Intercooler",
+      "description": "Air-to-air radiator that cools the compressed air from the turbo: cooler air is denser, so more oxygen and better efficiency.",
+      "where": "At the front, lower left next to the radiator.",
+      "faults": ["Punctures or leaking end tanks."],
+      "oem": ["Intercooler"]
+    },
+    "intake-manifold": {
+      "name": "Intake manifold",
+      "description": "Distributes air (and recirculated EGR gases) to the 4 cylinders. Over the years it gets coated with black sludge: a mixture of EGR soot and oil vapor.",
+      "where": "Front side of the cylinder head.",
+      "maintenance": ["Cleaning recommended if the engine is fouled by EGR deposits."]
+    },
+    "egr-valve": {
+      "name": "EGR valve and cooler",
+      "description": "Routes part of the exhaust gases back into the intake to lower combustion temperature and reduce nitrogen oxides (NOx). The gases first pass through a small water-cooled heat exchanger.",
+      "where": "Left end of the cylinder head, transmission side.",
+      "maintenance": [
+        "Take occasional out-of-town drives with the engine fully warm.",
+        "Clean or replace when it sticks."
+      ],
+      "faults": [
+        "Clogged/stuck valve: check engine light, hesitation, black smoke, rough idle. It's the most typical fault of diesels used in the city."
+      ],
+      "oem": ["EGR valve"]
+    },
+    "exhaust-manifold": {
+      "name": "Exhaust manifold",
+      "description": "Cast-iron part that collects the red-hot gases from the 4 cylinders and routes them to the turbo's turbine. It operates at several hundred degrees, which is why its surface is always rusty.",
+      "where": "Rear side of the cylinder head, toward the firewall.",
+      "faults": ["Cracks or blown gasket: puffing/ticking when cold and exhaust smell."]
+    },
+    "dpf": {
+      "name": "Catalytic converter and diesel particulate filter (DPF)",
+      "description": "Right after the turbo are the oxidation catalytic converter and the diesel particulate filter, which traps soot. Periodically the ECU burns it off with a \"regeneration\" (post-injections of diesel fuel, approx. 600 °C). Two small tubes carry the upstream and downstream pressure to a differential sensor. The Euro 6 version (K9K 628) adds a NOx trap.",
+      "where": "Behind the engine, standing vertically against the firewall.",
+      "maintenance": [
+        "Drives of 15–20 minutes at steady speed above 2,000 rpm help regenerations.",
+        "Use only \"low SAPS\" oil (ACEA C4)."
+      ],
+      "faults": [
+        "Clogging with city-only driving: warning light, reduced power, rising oil level (diesel fuel in the oil pan).",
+        "Faulty differential pressure sensor."
+      ],
+      "oem": ["DPF differential pressure sensor"]
+    },
+    "exhaust": {
+      "name": "Exhaust pipe and muffler",
+      "description": "Carries the gases from the DPF to the back of the car, running under the floor; the rear muffler reduces noise. On the Clio dCi the tailpipe is hidden and points downward.",
+      "where": "Under the floor pan, from the engine bay to the rear bumper.",
+      "faults": ["Muffler corrosion, broken rubber hangers (vibration)."]
+    },
+    "battery": {
+      "name": "12 V battery",
+      "description": "Supplies current for starting and stabilizes the electrical system. With Stop&Start a sturdier EFB battery is required. The positive terminal (+) is covered by the red cap.",
+      "where": "Left side of the engine bay, under a plastic cover.",
+      "specs": [
+        ["Resting voltage", "12.4–12.8 V"],
+        ["Rating", "60–70 Ah, 600–720 A (EFB with Stop&Start)"],
+        ["Group size", "L2 / L3 (verify dimensions)"]
+      ],
+      "maintenance": [
+        "Typical life 4–6 years.",
+        "Always disconnect the negative (−) first and reconnect it last."
+      ],
+      "faults": ["Slow cranking, Stop&Start not engaging, random warning lights."],
+      "oem": ["70 Ah EFB battery"]
+    },
+    "ecu": {
+      "name": "Engine control unit (ECU)",
+      "description": "The computer that manages injection, turbo, EGR, DPF regeneration and glow plug preheating by reading dozens of sensors. It is connected to the OBD diagnostic port under the dashboard.",
+      "where": "Next to the battery, left side.",
+      "faults": ["It rarely fails: more often the connectors or ground connections are corroded."]
+    },
+    "fuse-box": {
+      "name": "Engine bay fuse and relay box",
+      "description": "Contains the high-current fuses and relays (fan, glow plug preheating, pump, lights). A second fuse box is inside the cabin, to the left of the steering wheel.",
+      "where": "Left side of the engine bay, near the battery.",
+      "maintenance": ["Always replace a fuse with one of the same amperage (color)."]
+    },
+    "starter-motor": {
+      "name": "Starter motor",
+      "description": "Electric motor that turns the flywheel to start the engine. With Stop&Start it is reinforced to withstand many more starts.",
+      "where": "Low down behind the engine, on the transmission bell housing.",
+      "faults": ["\"Click\" with no cranking (solenoid), slow cranking (brushes)."],
+      "oem": ["Starter motor"]
+    },
+    "gearbox": {
+      "name": "JR5 manual transmission (5-speed)",
+      "description": "5-speed manual transmission with integrated differential, operated by two cables. It is bolted to the left side of the engine; the clutch is inside the bell housing.",
+      "where": "To the left of the engine.",
+      "specs": [
+        ["Type", "JR5, 5 speeds + reverse"],
+        ["Oil", "Tranself NFJ 75W-80"],
+        ["Capacity", "approx. 2.5–2.8 liters"]
+      ],
+      "maintenance": [
+        "Renault considers it \"filled for life\"; many mechanics change it around 100,000–120,000 km."
+      ],
+      "faults": ["Noisy bearings, stiff shifting when cold, seeping axle shaft seals."],
+      "oem": ["Tranself NFJ 75W-80 transmission oil"]
+    },
+    "clutch": {
+      "name": "Clutch and flywheel",
+      "description": "Disc, pressure plate and release bearing connect and disconnect the engine and transmission when you press the pedal. It is hydraulically actuated (same fluid as the brakes).",
+      "where": "Between the engine and transmission, inside the bell housing.",
+      "specs": [["Disc diameter", "approx. 215 mm"]],
+      "maintenance": ["Typical life 120,000–200,000 km depending on driving style."],
+      "faults": ["Slipping uphill in high gears, stiff pedal, judder when pulling away."],
+      "oem": ["Clutch kit"]
+    },
+    "driveshafts": {
+      "name": "Driveshafts and CV joints",
+      "description": "Two shafts that carry torque from the differential to the front wheels. The constant-velocity (CV) joints, protected by grease-filled rubber boots, allow the wheels to steer and follow suspension movement.",
+      "maintenance": ["Inspect the boots at every service."],
+      "faults": [
+        "Torn boot: grease gets out, dirt gets in and the joint clicks (\"tac-tac\") when turning."
+      ]
+    },
+    "brake-booster": {
+      "name": "Brake booster and master cylinder",
+      "description": "The brake booster (the big black \"drum\") uses vacuum from a vacuum pump to multiply the force of your foot; the master cylinder in front of it sends pressurized fluid to the wheels.",
+      "where": "On the firewall, left side, in front of the driver.",
+      "faults": ["Hard pedal = no vacuum; spongy pedal = air in the system."]
+    },
+    "brake-fluid-reservoir": {
+      "name": "Brake fluid reservoir",
+      "description": "Brake fluid reservoir (it also feeds the clutch hydraulics). The level drops slowly as the pads wear: a rapid drop indicates a leak.",
+      "where": "At the back on the left, above the master cylinder.",
+      "specs": [["Fluid", "DOT 4"]],
+      "maintenance": [
+        "Complete flush every 2–3 years: the fluid absorbs moisture and loses effectiveness."
+      ]
+    },
+    "abs-unit": {
+      "name": "ABS / ESP unit",
+      "description": "Hydraulic block with solenoid valves and a control module that modulates pressure at each wheel to prevent lock-up under braking (ABS) and correct skids (ESP). It reads the speed sensors of all 4 wheels.",
+      "where": "Lower left, near the firewall.",
+      "faults": ["ABS/ESP warning lights on: often a wheel speed sensor or its wiring."]
+    },
+    "brake.front": {
+      "name": "Front disc brake",
+      "description": "Vented disc (rotor) that turns with the wheel, clamped by the pads mounted in the floating caliper. The front brakes do about 70% of the braking work.",
+      "specs": [
+        ["Rotors", "Vented Ø 258 × 22 mm"],
+        ["Minimum rotor thickness", "19.8 mm"],
+        ["Caliper", "Floating, single-piston"]
+      ],
+      "maintenance": [
+        "Pads: check at every service (typical life 30,000–50,000 km).",
+        "Rotors: usually every 2 pad changes."
+      ],
+      "faults": [
+        "Steering wheel vibration when braking (warped rotors), squealing, dragging caliper."
+      ],
+      "oem": ["Front brake pads", "Front brake rotors Ø258"]
+    },
+    "brake.rear": {
+      "name": "Rear drum brake",
+      "description": "On the dCi 75 the rear brakes are drums: two shoes expand against the inside of the drum. The parking brake also acts here, via a cable. The hub houses the wheel bearing with the ABS sensor ring.",
+      "specs": [["Drum", "Ø 203 mm (8\")"]],
+      "maintenance": [
+        "Shoes: they last a long time (often over 100,000 km); periodic cleaning and adjustment."
+      ],
+      "faults": ["Parking brake with long lever travel, leaking wheel cylinder."],
+      "oem": ["Rear brake shoe kit", "Drum with bearing"]
+    },
+    "suspension.front": {
+      "name": "McPherson front suspension",
+      "description": "McPherson layout: the shock absorber with the coil spring around it also locates the wheel; at the bottom is the A-arm (lower control arm) with the ball joint. At the top, the strut mount with bearing lets the wheel steer.",
+      "maintenance": [
+        "Shock absorbers: check from 80,000 km; always replace them in pairs.",
+        "Check ball joints, bushings and anti-roll bar links."
+      ],
+      "faults": [
+        "Clunks over potholes (links, mounts), wallowing, uneven tire wear.",
+        "Springs broken at the last coil."
+      ],
+      "oem": ["Front shock absorber", "Lower control arm"]
+    },
+    "suspension.rear": {
+      "name": "Rear spring and shock absorber",
+      "description": "At the rear, the spring and shock absorber are separate and act on the torsion beam.",
+      "maintenance": ["Replace the shock absorbers in pairs."],
+      "faults": ["Oil seeping from the shock absorber, bouncing."],
+      "oem": ["Rear shock absorber"]
+    },
+    "rear-axle": {
+      "name": "Rear torsion beam axle",
+      "description": "Semi-independent axle: two trailing arms joined by a cross member that twists when one wheel rises relative to the other. A simple, robust and compact solution.",
+      "faults": ["Worn front axle bushings: \"loose\" rear end and clunks."]
+    },
+    "steering-rack": {
+      "name": "Steering rack and column",
+      "description": "Rack and pinion that converts steering wheel rotation into side-to-side movement of the tie rods. Power steering is electric (motor on the column, inside the cabin): there is no power steering fluid to check.",
+      "where": "Behind the engine, low down, bolted to the subframe.",
+      "specs": [
+        ["Power steering", "Electric (EPS), column-mounted"],
+        ["Turning circle", "approx. 10.6 m"]
+      ],
+      "maintenance": [
+        "Have the alignment (toe) checked after impacts or when tires show abnormal wear."
+      ],
+      "faults": ["Play in tie rod ends and tie rods: vague steering, noises."]
+    },
+    "anti-roll-bar": {
+      "name": "Anti-roll bar",
+      "description": "Steel bar that connects the two front suspensions and limits body roll in corners.",
+      "faults": ["Worn links and bushings: \"clunk-clunk\" over bumps."]
+    },
+    "subframe": {
+      "name": "Engine subframe",
+      "description": "Steel subframe bolted to the body that supports the engine/transmission (via the lower torque-reaction mount), suspension arms, steering and anti-roll bar."
+    },
+    "wheel": {
+      "name": "Wheel and tire",
+      "description": "16\" alloy wheel with tire. 4-bolt mounting.",
+      "specs": [
+        ["Tire sizes", "185/65 R15 88T or 195/55 R16 87H"],
+        ["Bolt pattern", "4 × 100 mm, center bore 60.1 mm"],
+        ["Wheel bolt torque", "105 Nm"],
+        [
+          "Pressure (normal load)",
+          "approx. 2.2–2.4 bar front / 2.0–2.2 bar rear (see the label on the driver's door)"
+        ]
+      ],
+      "maintenance": [
+        "Check the pressure monthly with the tires cold.",
+        "Legal minimum tread depth 1.6 mm (3 mm recommended, 4 mm for winter tires).",
+        "Rotate front/rear every 10,000–15,000 km."
+      ]
+    },
+    "spare-wheel": {
+      "name": "Spare wheel / inflation kit",
+      "description": "Under the cargo floor is the compact spare (or, depending on trim, the kit with compressor and sealant) along with the jack and lug wrench.",
+      "where": "Under the cargo area floor.",
+      "specs": [
+        ["Compact spare", "maximum speed 80 km/h"],
+        ["Compact spare pressure", "approx. 4.2 bar"]
+      ],
+      "maintenance": [
+        "Check the compact spare's pressure at least once a year.",
+        "The kit's sealant has an expiration date."
+      ]
+    },
+    "hood": {
+      "name": "Hood",
+      "description": "Opens by pulling the release lever under the dashboard (left side) and then releasing the safety catch under the front edge. It is held up by a prop rod.",
+      "maintenance": ["Lubricate the latch and safety catch from time to time."]
+    },
+    "door.front": {
+      "name": "Front door",
+      "description": "Door with power window, speaker and side-impact beam. The handle is body-colored.",
+      "maintenance": [
+        "Lubricate the hinges and door check strap; clean the drain holes on the bottom edge."
+      ]
+    },
+    "door.rear": {
+      "name": "Rear door",
+      "description": "One of the Clio IV's styling touches: the handle is hidden in the black pillar next to the window, so the car looks like a 3-door. The child safety lock is on the door edge."
+    },
+    "tailgate": {
+      "name": "Tailgate",
+      "description": "Gives access to the 300-liter cargo area. It is held up by two gas struts; the release button is above the license plate. It integrates the heated rear window, rear wiper, third brake light in the spoiler and the inner part of the taillights.",
+      "specs": [["Rear wiper", "approx. 300 mm (to be verified)"]],
+      "faults": [
+        "Worn gas struts: the tailgate won't stay up.",
+        "Wiring in the rubber boot breaking (rear wiper, license plate lights)."
+      ]
+    },
+    "bumper.front": {
+      "name": "Front bumper",
+      "description": "Painted plastic bumper cover that integrates the grille, lower air intake, daytime running lights and license plate. Behind it are the steel bumper beam and the crash absorbers."
+    },
+    "bumper.rear": {
+      "name": "Rear bumper",
+      "description": "Plastic rear bumper cover with reflectors and a black lower section. It can house the parking sensors."
+    },
+    "fender.front": {
+      "name": "Front fender",
+      "description": "Bolt-on panel (replaceable without welding) covering the front wheel. Inside is the plastic wheel well liner."
+    },
+    "body-shell": {
+      "name": "Body shell (roof, pillars, sides)",
+      "description": "Structural part of the car made of welded sheet steel: roof, pillars, rocker panels under the doors and rear quarter panels form a single piece. The low sculpted crease on the doors is the Clio IV's styling signature (design by Laurens van den Acker)."
+    },
+    "roof": {
+      "name": "Roof",
+      "description": "Sheet-steel roof panel with a short radio antenna at the rear."
+    },
+    "grille": {
+      "name": "Grille and badge",
+      "description": "Gloss-black band joining the two headlights with the large vertical Renault diamond in the center: the \"face\" introduced by the Clio IV itself."
+    },
+    "mirror": {
+      "name": "Side mirror",
+      "description": "Power-adjustable and heated; it integrates the side turn signal.",
+      "oem": ["Mirror glass"]
+    },
+    "headlight": {
+      "name": "Headlight",
+      "description": "Halogen headlight assembly with low beam, high beam, parking light and turn signal. The bulbs are changed from behind, through the engine bay.",
+      "specs": [
+        ["Low beam", "H7 55 W"],
+        ["High beam", "H1 55 W (to be verified: some versions H7)"],
+        ["Turn signal", "PY21W"],
+        ["Parking light", "W5W"]
+      ],
+      "maintenance": [
+        "Replace bulbs in pairs; don't touch the glass with your fingers.",
+        "Adjust headlight aim with the thumbwheel on the dashboard according to the load."
+      ]
+    },
+    "drl": {
+      "name": "LED daytime running lights and fog lights",
+      "description": "In the side air intakes of the bumper: the LED daytime running light strip (switches on automatically when the engine starts) and, below it, the fog light.",
+      "specs": [
+        ["Daytime running lights", "LED (module, no replaceable bulb)"],
+        ["Fog light", "H16 19 W (to be verified)"]
+      ]
+    },
+    "taillight": {
+      "name": "Taillight (outer)",
+      "description": "Part of the taillight fixed to the body: tail light, brake light and turn signal.",
+      "specs": [
+        ["Brake/tail", "P21/5W"],
+        ["Turn signal", "PY21W"]
+      ]
+    },
+    "tailgate-light": {
+      "name": "Taillight (on tailgate)",
+      "description": "Part of the taillight mounted on the tailgate: reverse light and rear fog light.",
+      "specs": [
+        ["Reverse light", "W16W"],
+        ["Rear fog light", "P21W"]
+      ]
+    },
+    "windshield": {
+      "name": "Windshield",
+      "description": "Laminated glass bonded to the body: it adds to stiffness and acts as a backstop for the passenger airbag. At the top it houses the rain/light sensor (if equipped).",
+      "maintenance": [
+        "A small chip can be repaired; if it's in the driver's field of view, the windshield must be replaced."
+      ]
+    },
+    "wipers": {
+      "name": "Windshield wipers",
+      "description": "Two flat blades with bayonet attachment.",
+      "specs": [
+        ["Driver side", "approx. 650 mm (26\")"],
+        ["Passenger side", "approx. 350–400 mm (to be verified)"]
+      ],
+      "maintenance": ["Replace once a year or when they leave streaks."],
+      "oem": ["Front wiper blade kit"]
+    },
+    "washer-reservoir": {
+      "name": "Washer fluid reservoir",
+      "description": "Top up through the blue cap. The actual reservoir is hidden low down behind the right bumper/fender.",
+      "where": "Filler neck with blue cap, front right of the engine bay.",
+      "specs": [["Capacity", "approx. 3 liters (more with headlight washers)"]],
+      "maintenance": ["In winter use antifreeze washer fluid, never plain water."]
+    },
+    "door-glass.front": {
+      "name": "Front door glass",
+      "description": "Tempered roll-down glass with power window regulator."
+    },
+    "door-glass.rear": {
+      "name": "Rear door glass",
+      "description": "Roll-down glass (power or manual depending on trim)."
+    },
+    "rear-window": {
+      "name": "Heated rear window",
+      "description": "Rear glass with defroster grid and rear wiper."
+    },
+    "dashboard": {
+      "name": "Dashboard and interior",
+      "description": "Dashboard with central multimedia screen (7\" Media Nav or R-Link), vents, climate controls and glove box. The OBD diagnostic port is low down on the driver's side."
+    },
+    "instrument-cluster": {
+      "name": "Instrument cluster",
+      "description": "Central digital speedometer with tachometer and fuel gauge on either side, trip computer and warning lights.",
+      "specs": [
+        ["Wrench light", "service due"],
+        ["Yellow \"coil\" light", "glow plug preheating / injection fault if flashing"]
+      ]
+    },
+    "steering-wheel": {
+      "name": "Steering wheel and driver airbag",
+      "description": "Tilt and telescoping steering wheel with front airbag; the audio controls are on the satellite stalk behind the right spoke, the cruise control buttons are on the wheel."
+    },
+    "gear-lever": {
+      "name": "Shift lever and parking brake",
+      "description": "5-speed shift lever (reverse by lifting the ring under the knob) and cable-operated mechanical parking brake."
+    },
+    "pedals": {
+      "name": "Pedal assembly",
+      "description": "Clutch (hydraulic), brake and electronic accelerator (potentiometer, no cable)."
+    },
+    "seat.front": {
+      "name": "Front seat",
+      "description": "Seat with adjustable head restraint and side airbag in the seatback; the driver's seat is height-adjustable."
+    },
+    "seats": {
+      "name": "Seats",
+      "description": "Front seats with adjustable head restraints and side airbags in the seatbacks (the driver's seat is height-adjustable) and a three-seat rear bench with folding seatback and Isofix anchors on the outer seats.",
+      "specs": [["Cargo area", "300 liters, 1,146 with seatback folded"]]
+    },
+    "seat.rear": {
+      "name": "Rear seat",
+      "description": "Three-seat bench with folding seatback (60/40 split depending on trim) and Isofix anchors on the outer seats."
+    },
+    "parcel-shelf": {
+      "name": "Cargo cover",
+      "description": "Removable rigid shelf that covers the cargo area."
+    },
+    "cabin-filter": {
+      "name": "Cabin air filter (pollen filter)",
+      "description": "Filters the air coming in through the vents. It slides out sideways from the HVAC unit, from the passenger footwell.",
+      "where": "Behind the dashboard, accessible low down on the passenger side.",
+      "maintenance": [
+        "Replace every year or every 15,000–30,000 km: when clogged, the windows fog up and the A/C performs worse."
+      ],
+      "oem": ["Cabin air filter"]
+    },
+    "airbag.passenger": {
+      "name": "Passenger airbag",
+      "description": "Front airbag on the passenger side, which can be deactivated with the key (switch on the side of the dashboard) to install a rear-facing child seat."
+    }
+  }
+}

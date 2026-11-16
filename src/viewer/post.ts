@@ -1,4 +1,4 @@
-// Post-produzione: occlusione ambientale, bagliore, vignettatura, tone mapping.
+// Post-processing: ambient occlusion, bloom, vignette, tone mapping.
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -58,7 +58,7 @@ export function createPost(
   });
   ao.blendIntensity = 0.85;
   composer.addPass(ao);
-  // limita i picchi speculari, altrimenti un singolo riflesso genera un alone enorme
+  // clamps specular peaks, otherwise a single highlight blooms into a huge halo
   composer.addPass(
     new ShaderPass({
       uniforms: { tDiffuse: { value: null } },
@@ -81,6 +81,12 @@ export function createPost(
     },
     render() {
       composer.render();
+    },
+    dispose() {
+      composer.dispose();
+      target.dispose();
+      ao.dispose();
+      bloom.dispose();
     },
   };
 }

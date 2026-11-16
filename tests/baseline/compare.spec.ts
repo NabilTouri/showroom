@@ -16,7 +16,7 @@ const MAX_DIFF_RATIO = Number(process.env.BASELINE_MAX_DIFF ?? 0.001);
 type Which = 'old' | 'new';
 interface State {
   name: string;
-  quality?: 'alta' | 'media' | 'bassa';
+  quality?: 'high' | 'low';
   mobile?: boolean;
   run?: (page: Page, which: Which) => Promise<void>;
 }
@@ -26,11 +26,14 @@ const select = (page: Page, oldId: string, which: Which, focus = false) =>
     which === 'old' ? oldId : mapId(oldId),
     focus,
   ] as const);
+// the original app named the quality levels in Italian
+const quality = (which: Which, level: 'high' | 'low') =>
+  which === 'new' ? level : { high: 'alta', low: 'bassa' }[level];
 const view = (page: Page, index: number) => press(page.locator('#views button').nth(index));
 
 const STATES: State[] = [
   { name: 'initial' },
-  { name: 'initial-high', quality: 'alta' },
+  { name: 'initial-high', quality: 'high' },
   { name: 'hood-selected', run: (p, w) => select(p, 'cofano', w) },
   {
     name: 'engine-turbo',
@@ -64,11 +67,20 @@ async function capture(browser: Browser, which: Which, state: State) {
   const page = await context.newPage();
   const errors = collectErrors(page);
   await openApp(page, which === 'old' ? OLD_URL : NEW_URL, {
-    quality: state.quality ?? 'bassa',
+    quality: quality(which, state.quality ?? 'low'),
     language: 'it',
   });
   await state.run?.(page, which);
   await waitForSettled(page);
+  // Chromium can keep the top bar's text rasterised at the sub-pixel offset it had while the bar
+  // reflowed during loading; a fresh layout makes both apps paint it the same way
+  await page.evaluate(() => {
+    const bar = document.querySelector<HTMLElement>('#topbar')!;
+    bar.style.display = 'none';
+    void bar.offsetWidth;
+    bar.style.display = '';
+  });
+  await page.waitForTimeout(300);
   // the isolated-part preview auto-rotates once per frame: its angle is not reproducible
   const shot = await page.screenshot({ mask: [page.locator('.pv canvas')] });
   await context.close();
@@ -97,7 +109,10 @@ test('scene structure matches the original app', async ({ browser }) => {
   for (const which of ['old', 'new'] as const) {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await openApp(page, which === 'old' ? OLD_URL : NEW_URL, { language: 'it' });
+    await openApp(page, which === 'old' ? OLD_URL : NEW_URL, {
+      quality: quality(which, 'low'),
+      language: 'it',
+    });
     const d = await page.evaluate(dumpScene);
     dumps.push(normalise(d, which === 'old'));
     fs.writeFileSync(path.join(OUT, `scene-${which}.json`), JSON.stringify(d, null, 1));
