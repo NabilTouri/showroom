@@ -26,7 +26,7 @@ const NODE_PART = {
   ClioIV_windshield: ['parabrezza'],
   ClioIV_steering_wheel: ['volante'], ClioIV_needle_tacho: ['plancia'],
 };
-const SKIP = new Set(['ClioIV_wheel_17x8']);          // ruote: si usano quelle di wheels.js (cerchio + pneumatico)
+const RIM = 'ClioIV_wheel_17x8';                      // cerchio in lega del modello: wheels.js lo monta dentro il pneumatico
 const OPEN = {                                        // asse e angolo di apertura
   cofano: ['z', -0.95], portellone: ['z', 1.3],
   porta_ant_sx: ['y', -1.1], porta_post_sx: ['y', -1.1], porta_ant_dx: ['y', 1.1], porta_post_dx: ['y', 1.1],
@@ -94,6 +94,7 @@ function materialFor(name, node) {
     case 'ClioIV_reverselight': return M.reverse;
     case 'ClioIV_rooflight': return M.roofl;
     case 'ClioIV_silver': return M.chrome;
+    case 'ClioIV_wheel': return M.rim;
     case 'ClioIV_dashboard': return M.plasticG;
     case 'ClioIV_doorpanel': case 'ClioIV_cabin': case 'ClioIV_interior': return M.cabin;
     case 'ClioIV_interior_lod0': return M.fabric;
@@ -148,7 +149,7 @@ export async function buildBody(car) {
   }
   // 2) gli altri pezzi con nome
   for (const n of [...top.children]) {
-    if (SKIP.has(n.name)) continue;
+    if (n.name === RIM) { const w = wrap(n); w.position.set(0, 0, 0); car.rim = w; continue; }
     const def = NODE_PART[n.name]; if (!def || OPEN[def[0]]) continue;
     part(def[0], def[1] ? inner[def[1]] : null).add(wrap(n));
   }

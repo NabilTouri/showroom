@@ -16,7 +16,7 @@ export function makeEnvironment(renderer) {
     m.position.set(...pos); m.rotation.set(...rot); s.add(m);
   };
   const H = Math.PI / 2;
-  panel(8.5, 3.4, [0, 5.6, 0], [H, 0, 0], 4.2);                       // softbox a soffitto
+  panel(8.5, 3.4, [0, 5.6, 0], [H, 0, 0], 3.4);                       // softbox a soffitto
   panel(11, 0.55, [0, 2.6, 7], [0, 0, 0], 16);                      // strisce laterali
   panel(11, 0.55, [0, 2.6, -7], [0, 0, 0], 16);
   panel(11, 0.25, [0, 0.9, 7.2], [0, 0, 0], 6, 0xbfd4ff);           // lama bassa fredda
@@ -47,12 +47,13 @@ const floorShader = {
     varying vec4 vUv; varying vec3 vW;
     void main() {
       vec2 uv = vUv.xy / vUv.w; float d = length(vW.xz);
-      float blur = 2.0 + d * 1.3; vec3 r = vec3(0.0); float tw = 0.0;
+      float blur = 1.0 + d * 0.3; vec3 r = vec3(0.0); float tw = 0.0;
       for (int i = -2; i <= 2; i++) for (int j = -2; j <= 2; j++) {
         float w = 1.0 / (1.0 + float(i * i + j * j));
         r += texture2D(tDiffuse, uv + vec2(float(i), float(j)) * texel * blur).rgb * w; tw += w;
       }
       r /= tw;
+      vec2 e = smoothstep(vec2(0.0), vec2(0.04), uv) * smoothstep(vec2(0.0), vec2(0.04), 1.0 - uv); r *= e.x * e.y;
       float glow = smoothstep(7.5, 0.0, d);
       vec3 col = color * (0.22 + 1.5 * glow * glow) + r * strength * smoothstep(9.0, 2.2, d);
       gl_FragColor = vec4(mix(bg, col, smoothstep(13.0, 5.5, d)), 1.0);
@@ -75,13 +76,13 @@ export function createStudio(renderer, scene) {
   scene.environmentIntensity = 1.0;
 
   // ----- luci -----
-  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  const key = new THREE.DirectionalLight(0xffffff, 0.55);
   key.position.set(-2.5, 7.5, 3.5); key.castShadow = true;
   Object.assign(key.shadow.camera, { left: -3.6, right: 3.6, top: 3.6, bottom: -3.6, near: 1, far: 16 });
   key.shadow.bias = -0.0005; key.shadow.normalBias = 0.035; key.shadow.radius = 5;
   scene.add(key);
-  const rimA = new THREE.DirectionalLight(0xbfd6ff, 0.45); rimA.position.set(6, 3, -6); scene.add(rimA);
-  const rimB = new THREE.DirectionalLight(0xffe9cf, 0.3); rimB.position.set(-6, 2.5, -5); scene.add(rimB);
+  const rimA = new THREE.DirectionalLight(0xbfd6ff, 0.25); rimA.position.set(6, 3, -6); scene.add(rimA);
+  const rimB = new THREE.DirectionalLight(0xffe9cf, 0.18); rimB.position.set(-6, 2.5, -5); scene.add(rimB);
   scene.add(new THREE.HemisphereLight(0xcfd8e6, 0x101114, 0.18));
   const bay = new THREE.SpotLight(0xfff3e0, 0, 4, 0.75, 0.6, 1.2);      // luce sul vano motore, accesa a cofano aperto
   bay.position.set(-2.9, 2.3, 0.4); bay.target.position.set(-1.35, 0.6, 0); scene.add(bay, bay.target);
@@ -96,7 +97,7 @@ export function createStudio(renderer, scene) {
     if (res === mirrorRes) return; mirrorRes = res;
     if (mirror) { floor.remove(mirror); mirror.dispose(); mirror = null; }
     if (res) {
-      mirror = new Reflector(geo, { textureWidth: res, textureHeight: res, clipBias: 0.002, color: 0x2b2f37, shader: floorShader, multisample: 0 });
+      mirror = new Reflector(geo, { textureWidth: res, textureHeight: res, clipBias: 0.002, color: 0x5a606c, shader: floorShader, multisample: 0 });
       mirror.material.uniforms.texel.value.set(1 / res, 1 / res);
       mirror.rotation.x = -Math.PI / 2; floor.add(mirror);
     }

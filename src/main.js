@@ -9,6 +9,7 @@ import { buildMechanics } from './car/engine.js';
 import { buildInterior } from './car/interior.js';
 import { L } from './car/surface.js';
 import { M, COLORS, applyPaint } from './car/materials.js';
+import { createLights, LIGHT_LABEL } from './car/lights.js';
 import { CATEGORIES, VEHICLE, getPart } from './data/parts.js';
 
 const $ = (s) => document.querySelector(s);
@@ -38,6 +39,7 @@ scene.add(car.root);
 await buildBody(car); buildWheels(car); buildInterior(car); buildMechanics(car);
 car.root.traverse((o) => { if (o.isMesh) o.receiveShadow = !o.material.transparent; });
 car.root.updateMatrixWorld(true);
+const lights = createLights(car);
 
 const info = {};           // id scena -> scheda
 for (const id in car.parts) { const p = getPart(id); if (p) info[id] = p; }
@@ -297,7 +299,11 @@ function syncOpenUI() {
   $('#btn-openall').textContent = all ? 'Chiudi tutto' : 'Apri tutto'; $('#btn-openall').dataset.all = all ? '1' : '';
 }
 $('#btn-openall').onclick = () => { const open = !$('#btn-openall').dataset.all; for (const id in car.openables) setOpen(id, open); };
-$('#btn-openmenu').onclick = (e) => { e.stopPropagation(); $('#btn-openmenu').parentElement.classList.toggle('open'); };
+for (const b of [$('#btn-openmenu'), $('#btn-lightmenu'), $('#btn-colormenu')]) b.onclick = (e) => { e.stopPropagation(); const m = b.parentElement, was = m.classList.contains('open'); document.querySelectorAll('.menu.open').forEach((x) => x.classList.remove('open')); m.classList.toggle('open', !was); };
+for (const id in LIGHT_LABEL) {
+  const l = document.createElement('label'); l.innerHTML = `<span>${LIGHT_LABEL[id]}</span><input type="checkbox" ${lights.state[id] ? 'checked' : ''}>`;
+  l.querySelector('input').onchange = (e) => { lights.state[id] = e.target.checked; invalidate(); }; $('#lights').append(l);
+}
 addEventListener('pointerdown', (e) => { if (!e.target.closest('.menu')) document.querySelectorAll('.menu.open').forEach((m) => m.classList.remove('open')); });
 $('#btn-xray').onclick = () => setXray(!state.xray);
 $('#btn-explode').onclick = () => {
@@ -307,10 +313,11 @@ $('#btn-explode').onclick = () => {
 const paintState = { from: 'Rosso Flamme', to: 'Rosso Flamme', k: 1 };
 applyPaint(paintState.from, paintState.to, 1);
 Object.entries(COLORS).forEach(([name, c], i) => {
-  const b = document.createElement('button'); b.className = 'sw' + (i === 0 ? ' on' : ''); b.title = `${name} (${c.tipo})`; b.setAttribute('aria-label', name); b.style.background = '#' + c.hex.toString(16).padStart(6, '0');
+  const b = document.createElement('button'); b.className = 'cl' + (i === 0 ? ' on' : '');
+  b.innerHTML = `<i style="background:#${c.hex.toString(16).padStart(6, '0')}"></i><span>${name}</span><small>${c.tipo}</small>`;
   b.onclick = () => {
     paintState.from = paintState.to; paintState.to = name; paintState.k = 0;
-    document.querySelectorAll('.sw').forEach((s) => s.classList.toggle('on', s === b)); invalidate();
+    document.querySelectorAll('.cl').forEach((s) => s.classList.toggle('on', s === b)); invalidate();
   };
   $('#colors').append(b);
 });
@@ -395,8 +402,10 @@ renderer.setAnimationLoop(() => {
     camera.position.lerpVectors(fly.p0, fly.p1, k); controls.target.lerpVectors(fly.t0, fly.t1, k);
     if (fly.t >= 1) fly = null; anim = true;
   }
+  if (lights.animating) anim = true;
   controls.update();
   if (dirty || anim) {
+    lights.apply(clock.elapsedTime, dt);
     if (shadowDirty) { studio.updateContactShadow(); shadowDirty = false; }
     studio.bay.intensity = 9 * ease(car.openables.cofano.userData.open.cur);
     if (quality.cfg.post && post) post.render(); else renderer.render(scene, camera);
@@ -407,4 +416,4 @@ renderer.setAnimationLoop(() => {
 canvas.addEventListener('pointerdown', () => { fly = null; });
 
 $('#loading').classList.add('done');
-window.__app = { camera, controls, car, THREE, select, setOpen, setXray, goView, state, invalidate, info, quality, studio, scene, renderer };
+window.__app = { lights, camera, controls, car, THREE, select, setOpen, setXray, goView, state, invalidate, info, quality, studio, scene, renderer };

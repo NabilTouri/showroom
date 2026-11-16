@@ -4,10 +4,26 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { FA, RA, WHEEL_Y } from './surface.js';
 import { M } from './materials.js';
+import { grain, label } from './textures.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
+// Micro-rilievo dei materiali del vano motore: fusione d'alluminio, ghisa, ruggine, plastica goffrata, gomma
+function dressMaterials() {
+  const fine = grain(256, { octaves: 5, amp: 60 }, { repeat: [3, 3] }), coarse = grain(256, { octaves: 4, amp: 90, blotch: 0.5 }, { repeat: [2, 2] });
+  const set = (m, tex, bump, rough) => { m.bumpMap = tex; m.bumpScale = bump; if (rough) m.roughnessMap = tex; m.needsUpdate = true; };
+  set(M.alu, fine, 0.9, true); M.alu.color.setHex(0xb4b7bb); M.alu.roughness = 0.62; M.alu.metalness = 0.85;
+  set(M.aluDark, fine, 0.9, true); M.aluDark.roughness = 0.7;
+  set(M.iron, coarse, 1.4, true); M.iron.color.setHex(0x34363a); M.iron.roughness = 0.9; M.iron.metalness = 0.55;
+  set(M.rust, coarse, 2.0, true); M.rust.color.setHex(0x5e3f2c); M.rust.roughness = 1.0; M.rust.metalness = 0.35;
+  set(M.plastic, fine, 0.35, false); M.plastic.roughness = 0.62;
+  set(M.plasticG, fine, 0.35, false);
+  set(M.hose, fine, 0.5, false); M.hose.roughness = 0.75;
+  M.steel.roughness = 0.3; M.steel.envMapIntensity = 1.3;
+}
+
 export function buildMechanics(car) {
+  dressMaterials();
   const mech = new THREE.Group(); car.root.add(mech); car.mech = mech;
   const part = (id, explode = true) => {
     const g = new THREE.Group(); g.userData.partId = id; g.userData.explode = explode; mech.add(g); car.parts[id] = g; return g;
@@ -26,6 +42,11 @@ export function buildMechanics(car) {
     return add(g, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => V(...p))), n * 3, rad, 6), mat);
   };
 
+  const lab = (g, tex, w, d, x, y, z, facing = 'up') => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.45 }));
+    m.position.set(x, y, z); if (facing === 'up') { m.rotation.x = -Math.PI / 2; m.rotation.z = Math.PI / 2; } else m.rotation.y = -Math.PI / 2;
+    g.add(m); return m;
+  };
   let g;
   // ===== Motore =====
   g = part('motore');
@@ -38,7 +59,7 @@ export function buildMechanics(car) {
   g = part('coperchio_motore');
   box(g, M.plastic, 0.36, 0.03, 0.46, 0.71, 0.752, -0.14, 0.014);
   for (let i = 0; i < 4; i++) box(g, M.plasticG, 0.22, 0.012, 0.05, 0.72, 0.771, -0.31 + i * 0.113, 0.005);
-  box(g, M.chrome, 0.05, 0.006, 0.09, 0.59, 0.769, -0.14, 0.002);
+  lab(g, label([['RENAULT', 'bold 44px Arial'], ['dCi', 'italic bold 120px Arial']], { bg: '#18191b', fg: '#d9dcdf' }), 0.13, 0.065, 0.585, 0.7675, -0.14);
 
   g = part('tappo_olio');
   cyl(g, M.plastic, 0.03, 0.03, 0.66, 0.725, -0.30); cyl(g, M.yellow, 0.022, 0.006, 0.66, 0.743, -0.30);
@@ -135,7 +156,8 @@ export function buildMechanics(car) {
   g = part('vaschetta_refrigerante');
   { const m = box(g, M.white, 0.17, 0.15, 0.19, 0.95, 0.70, -0.50, 0.03); m.castShadow = false; }
   box(g, M.fluidG, 0.16, 0.07, 0.18, 0.95, 0.665, -0.50, 0.025);
-  cyl(g, M.plastic, 0.032, 0.03, 0.93, 0.79, -0.50); tube(g, M.hose, 0.008, [[0.90, 0.64, -0.42], [0.80, 0.62, -0.42], [0.64, 0.66, -0.38]]);
+  cyl(g, M.plastic, 0.032, 0.03, 0.93, 0.79, -0.50);
+  lab(g, label([['MAX', 'bold 70px Arial'], ['MIN', 'bold 70px Arial']], { w: 256, h: 256, bg: '#e8e6da', fg: '#222' }), 0.05, 0.09, 0.864, 0.70, -0.50, 'front'); tube(g, M.hose, 0.008, [[0.90, 0.64, -0.42], [0.80, 0.62, -0.42], [0.64, 0.66, -0.38]]);
   g = part('termostato');
   box(g, M.plastic, 0.06, 0.06, 0.05, 0.60, 0.66, -0.385 + 0.0, 0.012);
 
@@ -149,6 +171,7 @@ export function buildMechanics(car) {
   g = part('batteria');
   box(g, M.plastic, 0.185, 0.185, 0.25, 0.84, 0.655, 0.37, 0.012); box(g, M.plasticG, 0.185, 0.02, 0.25, 0.84, 0.755, 0.37, 0.006);
   cyl(g, M.redP, 0.014, 0.025, 0.80, 0.775, 0.45); cyl(g, M.steel, 0.012, 0.025, 0.80, 0.775, 0.29);
+  lab(g, label([['12V  70Ah  720A', 'bold 54px Arial'], ['EFB  START-STOP', 'bold 44px Arial']], { bg: '#e9e9e4', fg: '#111', accent: '#f2c300' }), 0.17, 0.085, 0.865, 0.7655, 0.37);
   tube(g, M.redP, 0.006, [[0.80, 0.78, 0.45], [0.74, 0.78, 0.50], [0.66, 0.765, 0.54]]);
   g = part('centralina_motore');
   box(g, M.alu, 0.03, 0.15, 0.20, 0.715, 0.66, 0.36, 0.006); box(g, M.plastic, 0.035, 0.04, 0.16, 0.715, 0.755, 0.36, 0.006);
@@ -203,7 +226,7 @@ export function buildMechanics(car) {
     const zt = 0.585 * s, zb = 0.635 * s;
     tube(g, M.plastic, 0.026, [[FA + 0.005, 0.36, zb], [FA + 0.02, 0.60, 0.61 * s]]);
     tube(g, M.steel, 0.011, [[FA + 0.02, 0.60, 0.61 * s], [FA + 0.035, 0.80, zt]]);
-    { const sp = helix(g, M.redP, 0, 0, 0.26, 0, 0.062, 5); sp.position.set(FA + 0.02, 0.54, 0.607 * s); sp.rotation.set(-0.19 * s, 0, -0.075); }
+    { const sp = helix(g, M.rimDark, 0, 0, 0.26, 0, 0.062, 5); sp.position.set(FA + 0.02, 0.54, 0.607 * s); sp.rotation.set(-0.19 * s, 0, -0.075); }
     cyl(g, M.rubber, 0.07, 0.025, FA + 0.035, 0.81, zt); cyl(g, M.steel, 0.075, 0.008, FA + 0.022, 0.545, 0.61 * s);
     // braccio inferiore e montante
     tube(g, M.iron, 0.02, [[FA - 0.02, 0.215, 0.33 * s], [FA, 0.20, 0.50 * s], [FA, 0.205, 0.66 * s]]);
@@ -227,7 +250,7 @@ export function buildMechanics(car) {
   }
   for (const s of [1, -1]) {
     g = part('sospensione_post_' + (s > 0 ? 'sx' : 'dx'), false);
-    { const sp = helix(g, M.redP, RA - 0.10, 0.31, 0.50, 0.50 * s, 0.05, 5); }
+    { const sp = helix(g, M.rimDark, RA - 0.10, 0.31, 0.50, 0.50 * s, 0.05, 5); }
     cyl(g, M.steel, 0.05, 0.008, RA - 0.10, 0.305, 0.50 * s);
     tube(g, M.plastic, 0.022, [[RA + 0.03, 0.27, 0.60 * s], [RA + 0.09, 0.50, 0.59 * s]]); tube(g, M.steel, 0.01, [[RA + 0.09, 0.50, 0.59 * s], [RA + 0.14, 0.70, 0.58 * s]]);
   }

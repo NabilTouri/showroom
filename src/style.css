@@ -80,3 +80,9 @@ ul.faults li::marker{color:var(--warn)}
 }
 
 .note a{color:var(--acc)}
+
+.cl{display:flex!important;align-items:center;gap:9px;width:100%;text-align:left;padding:6px 8px!important;border-radius:8px}
+.cl i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.3);flex:none}
+.cl span{flex:1}.cl small{color:var(--mut);font-size:11px}
+.cl.on{background:rgba(255,207,51,.16)!important;color:var(--tx)!important;box-shadow:inset 3px 0 0 var(--acc)}
+#colors{min-width:250px;left:auto;right:0}

@@ -32,7 +32,9 @@ export function createPost(renderer, scene, camera) {
   ao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4, radiusExponent: 1, rings: 2, samples: 12 });
   ao.blendIntensity = 0.85;
   composer.addPass(ao);
-  const bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.14, 0.5, 2.2);
+  // limita i picchi speculari, altrimenti un singolo riflesso genera un alone enorme
+  composer.addPass(new ShaderPass({ uniforms: { tDiffuse: { value: null } }, vertexShader: GradeShader.vertexShader, fragmentShader: 'uniform sampler2D tDiffuse; varying vec2 vUv; void main(){ vec4 c = texture2D(tDiffuse, vUv); float m = max(c.r, max(c.g, c.b)); gl_FragColor = vec4(c.rgb * min(1.0, 7.0 / max(m, 1e-4)), c.a); }' }));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.13, 0.45, 3.0);
   composer.addPass(bloom);
   composer.addPass(new ShaderPass(GradeShader));
   composer.addPass(new OutputPass());

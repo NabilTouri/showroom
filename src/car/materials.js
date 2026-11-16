@@ -52,7 +52,7 @@ export const M = {
   trim: St({ color: 0x0c0c0d, roughness: 0.5, metalness: 0.0, side: DS }),
   gloss: P({ color: 0x050506, roughness: 0.08, metalness: 0.2, clearcoat: 1, side: DS }),
   glass: P({ color: 0x16262a, roughness: 0.0, metalness: 0.0, transparent: true, opacity: 0.42, side: DS, depthWrite: false, clearcoat: 1, clearcoatRoughness: 0, envMapIntensity: 1.5 }),
-  lens: P({ color: 0xe8eef2, roughness: 0.0, metalness: 0.0, transparent: true, opacity: 0.1, side: DS, depthWrite: false, clearcoat: 1, clearcoatRoughness: 0, envMapIntensity: 1.1 }),
+  lens: P({ color: 0xe8eef2, roughness: 0.0, metalness: 0.0, transparent: true, opacity: 0.05, side: DS, depthWrite: false, envMapIntensity: 0.7 }),
   lampIn: St({ color: 0xd6d9dc, roughness: 0.12, metalness: 1, side: DS, envMapIntensity: 1.4 }),
   redLens: P({ color: 0xb00c16, roughness: 0.03, metalness: 0, transparent: true, opacity: 0.72, side: DS, clearcoat: 1, emissive: 0xff0a0a, emissiveIntensity: 0.05, envMapIntensity: 1.4 }),
   redIn: St({ color: 0x7a0a10, roughness: 0.2, metalness: 0.8, side: DS }),

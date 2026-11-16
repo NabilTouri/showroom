@@ -1,6 +1,6 @@
 // Livelli di qualita': scelta automatica all'avvio, discesa automatica se il frame rate e' basso, scelta manuale salvata.
 export const LEVELS = {
-  alta: { label: 'Alta', pixelRatio: 2, post: true, ao: true, mirror: 1024, shadow: 2048, beams: true },
+  alta: { label: 'Alta', pixelRatio: 2, post: true, ao: true, mirror: 640, shadow: 2048, beams: true },
   media: { label: 'Media', pixelRatio: 1.5, post: true, ao: false, mirror: 512, shadow: 1024, beams: false },
   bassa: { label: 'Bassa', pixelRatio: 1.25, post: false, ao: false, mirror: 0, shadow: 1024, beams: false },
 };
