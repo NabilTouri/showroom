@@ -1,0 +1,47 @@
+{
+  "title": "{{vehicle}} — 3D Explorer",
+  "loading": "Building the model…",
+  "hint": "Drag to rotate · wheel/pinch to zoom · click a part for details · double-click doors, hood and tailgate to open them",
+  "partName": "{{name}} ({{qualifiers}})",
+  "language": "Language",
+  "toolbar": {
+    "openAll": "Open all",
+    "closeAll": "Close all",
+    "openAllTitle": "Open or close every door, hood and tailgate",
+    "openables": "Openings",
+    "lights": "Lights",
+    "xray": "X-ray",
+    "xrayTitle": "See-through body",
+    "explode": "Explode engine",
+    "explodeTitle": "Exploded view of the engine bay",
+    "showAll": "Show all",
+    "quality": "Quality: {{level}}",
+    "qualityTitle": "Change the graphics quality (High, Medium, Low)",
+    "colour": "Color",
+    "partList": "Part list"
+  },
+  "quality": { "high": "High", "medium": "Medium", "low": "Low" },
+  "finish": { "solid": "solid", "metallic": "metallic", "pearl": "pearl" },
+  "list": {
+    "search": "Search parts…",
+    "vehicleCard": "Vehicle card",
+    "vehicleCardTitle": "Technical data of the vehicle"
+  },
+  "panel": {
+    "close": "Close",
+    "preview": "Isolated part · drag to rotate",
+    "open": "Open {{part}}",
+    "closeOpenable": "Close {{part}}",
+    "focus": "Focus",
+    "hide": "Hide",
+    "show": "Show",
+    "where": "Where it is",
+    "description": "What it is and what it does",
+    "specs": "Technical data",
+    "maintenance": "Maintenance",
+    "faults": "Typical faults and symptoms",
+    "oem": "{{make}} spare parts and OEM codes",
+    "verify": "to be verified",
+    "vehicleCard": "Vehicle card"
+  }
+}

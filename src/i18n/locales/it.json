@@ -1,0 +1,55 @@
+{
+  "title": "{{vehicle}} — Esploratore 3D",
+  "loading": "Costruzione del modello…",
+  "hint": "Trascina per ruotare · rotellina/pizzico per zoom · clic su un pezzo per i dettagli · doppio clic su porte, cofano e baule per aprirli",
+  "partName": "{{name}} {{qualifiers}}",
+  "language": "Lingua",
+  "toolbar": {
+    "openAll": "Apri tutto",
+    "closeAll": "Chiudi tutto",
+    "openAllTitle": "Apri o chiudi tutte le aperture",
+    "openables": "Aperture",
+    "lights": "Luci",
+    "xray": "Raggi X",
+    "xrayTitle": "Carrozzeria trasparente",
+    "explode": "Esplodi motore",
+    "explodeTitle": "Vista esplosa del vano motore",
+    "showAll": "Mostra tutto",
+    "quality": "Qualità: {{level}}",
+    "qualityTitle": "Cambia la qualità grafica (Alta, Media, Bassa)",
+    "colour": "Colore",
+    "partList": "Elenco componenti"
+  },
+  "quality": {
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Bassa"
+  },
+  "finish": {
+    "solid": "pastello",
+    "metallic": "metallizzato",
+    "pearl": "perlato"
+  },
+  "list": {
+    "search": "Cerca componente…",
+    "vehicleCard": "Scheda auto",
+    "vehicleCardTitle": "Scheda tecnica dell'auto"
+  },
+  "panel": {
+    "close": "Chiudi",
+    "preview": "Pezzo isolato · trascina per ruotare",
+    "open": "Apri {{part}}",
+    "closeOpenable": "Chiudi {{part}}",
+    "focus": "Inquadra",
+    "hide": "Nascondi",
+    "show": "Mostra",
+    "where": "Dove si trova",
+    "description": "Cos'è e a cosa serve",
+    "specs": "Dati tecnici",
+    "maintenance": "Manutenzione",
+    "faults": "Guasti e sintomi tipici",
+    "oem": "Ricambi e codici OEM {{make}}",
+    "verify": "da verificare",
+    "vehicleCard": "Scheda auto"
+  }
+}
